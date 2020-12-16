@@ -1,0 +1,35 @@
+/.metadata/
+
+/restyafiak/HELP.md
+/restyafiak/target/
+/restyafiak/!.mvn/wrapper/maven-wrapper.jar
+/restyafiak/!**/src/main/**/target/
+/restyafiak/!**/src/test/**/target/
+
+### STS ###
+/restyafiak/.apt_generated
+/restyafiak/.classpath
+/restyafiak/.factorypath
+/restyafiak/.project
+/restyafiak/.settings
+/restyafiak/.springBeans
+/restyafiak/.sts4-cache
+
+### IntelliJ IDEA ###
+/restyafiak/.idea
+/restyafiak/*.iws
+/restyafiak/*.iml
+/restyafiak/*.ipr
+
+### NetBeans ###
+/restyafiak//nbproject/private/
+/restyafiak//nbbuild/
+/restyafiak//dist/
+/restyafiak//nbdist/
+/restyafiak//.nb-gradle/
+/restyafiak/build/
+/restyafiak/!**/src/main/**/build/
+/restyafiak/!**/src/test/**/build/
+
+### VS Code ###
+/restyafiak/.vscode/
