@@ -28,7 +28,7 @@ public class FireTruck implements Serializable {
 	private float speed;
 
 	@ManyToOne
-    @JoinColumn(name="FIT_FIRESTATION_ID", nullable=false)
+    @JoinColumn(name="FIT_FIRESTATION_ID")
     private FireStation fireStation;
 	
 	public Long getId() {

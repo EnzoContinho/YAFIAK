@@ -22,11 +22,11 @@
 /restyafiak/*.ipr
 
 ### NetBeans ###
-/restyafiak//nbproject/private/
-/restyafiak//nbbuild/
-/restyafiak//dist/
-/restyafiak//nbdist/
-/restyafiak//.nb-gradle/
+/restyafiak/nbproject/private/
+/restyafiak/nbbuild/
+/restyafiak/dist/
+/restyafiak/nbdist/
+/restyafiak/.nb-gradle/
 /restyafiak/build/
 /restyafiak/!**/src/main/**/build/
 /restyafiak/!**/src/test/**/build/

@@ -33,8 +33,8 @@ public class FireStation implements Serializable {
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
         name = "J_FIRE_FIRESTATION", 
-        joinColumns = { @JoinColumn(name="FIR_ID") }, 
-        inverseJoinColumns = { @JoinColumn(name="FIS_ID") }
+        joinColumns = { @JoinColumn(name="FIRESTATION_ID") }, 
+        inverseJoinColumns = { @JoinColumn(name="FIRE_ID") }
     )
 	Set<Fire> fires = new HashSet<>();
 	
