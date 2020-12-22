@@ -25,10 +25,10 @@ public class FireStation implements Serializable {
 	private String name;
 	
 	@Column(name="FIS_LOCATIONX", columnDefinition="real", nullable=false)
-	private float locationX;
+	private double locationX;
 	
 	@Column(name="FIS_LOCATIONY", columnDefinition="real", nullable=false)
-	private float locationY;
+	private double locationY;
 	
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
@@ -57,20 +57,36 @@ public class FireStation implements Serializable {
 		this.name = name;
 	}
 
-	public float getLocationX() {
+	public double getLocationX() {
 		return locationX;
 	}
 
-	public void setLocationX(float locationX) {
+	public void setLocationX(double locationX) {
 		this.locationX = locationX;
 	}
 
-	public float getLocationY() {
+	public double getLocationY() {
 		return locationY;
 	}
 
-	public void setLocationY(float locationY) {
+	public void setLocationY(double locationY) {
 		this.locationY = locationY;
+	}
+
+	public Set<Fire> getFires() {
+		return fires;
+	}
+
+	public void setFires(Set<Fire> fires) {
+		this.fires = fires;
+	}
+
+	public Set<FireTruck> getFireTrucks() {
+		return fireTrucks;
+	}
+
+	public void setFireTrucks(Set<FireTruck> fireTrucks) {
+		this.fireTrucks = fireTrucks;
 	}
 	
 }

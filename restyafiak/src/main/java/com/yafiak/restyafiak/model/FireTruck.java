@@ -19,13 +19,13 @@ public class FireTruck implements Serializable {
     private Long id;
 	
 	@Column(name="FIT_CAPACITY", columnDefinition="real", nullable=false)
-	private float capacity;
+	private double capacity;
 	
 	@Column(name="FIT_RATE", columnDefinition="real", nullable=false)
-	private float waterRate;
+	private double waterRate;
 	
 	@Column(name="FIT_SPEED", columnDefinition="real", nullable=false)
-	private float speed;
+	private double speed;
 
 	@ManyToOne
     @JoinColumn(name="FIT_FIRESTATION_ID")
@@ -39,27 +39,27 @@ public class FireTruck implements Serializable {
 		this.id = id;
 	}
 
-	public float getCapacity() {
+	public double getCapacity() {
 		return capacity;
 	}
 
-	public void setCapacity(float capacity) {
+	public void setCapacity(double capacity) {
 		this.capacity = capacity;
 	}
 
-	public float getWaterRate() {
+	public double getWaterRate() {
 		return waterRate;
 	}
 
-	public void setWaterRate(float waterRate) {
+	public void setWaterRate(double waterRate) {
 		this.waterRate = waterRate;
 	}
 
-	public float getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 
-	public void setSpeed(float speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 	

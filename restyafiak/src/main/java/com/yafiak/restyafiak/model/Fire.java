@@ -21,10 +21,10 @@ public class Fire implements Serializable {
     private Long id;
 	
 	@Column(name="FIR_LOCATIONX", columnDefinition="real", nullable=false)
-	private float locationX;
+	private double locationX;
 	
 	@Column(name="FIR_LOCATIONY", columnDefinition="real", nullable=false)
-	private float locationY;
+	private double locationY;
 	
 	@Column(name="FIR_INTENSITY", columnDefinition="integer", nullable=false)
 	private int intensity;
@@ -36,11 +36,11 @@ public class Fire implements Serializable {
 		return id;
 	}
 
-	public float getLocationX() {
+	public double getLocationX() {
 		return locationX;
 	}
 
-	public float getLocationY() {
+	public double getLocationY() {
 		return locationY;
 	}
 
@@ -52,15 +52,23 @@ public class Fire implements Serializable {
 		this.id = id;
 	}
 
-	public void setLocationX(float locationX) {
+	public void setLocationX(double locationX) {
 		this.locationX = locationX;
 	}
 
-	public void setLocationY(float locationY) {
+	public void setLocationY(double locationY) {
 		this.locationY = locationY;
 	}
 
 	public void setIntensity(int intensity) {
 		this.intensity = intensity;
+	}
+
+	public Set<FireStation> getFireStations() {
+		return fireStations;
+	}
+
+	public void setFireStations(Set<FireStation> fireStations) {
+		this.fireStations = fireStations;
 	}
 }
