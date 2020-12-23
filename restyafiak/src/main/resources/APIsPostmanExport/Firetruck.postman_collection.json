@@ -1,17 +1,17 @@
 {
 	"info": {
-		"_postman_id": "c8805dcd-ca05-4b8d-9900-dea8b726cab4",
-		"name": "Fire",
+		"_postman_id": "fd9cffbc-2916-401a-887f-2d5dc23a3699",
+		"name": "Firetruck",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "API de récupération d'un fire selon son id",
+			"name": "API de récupération d'un firetruck selon son id",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/fires/5",
+					"raw": "http://localhost:8080/api/firetrucks/5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -19,7 +19,7 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fires",
+						"firetrucks",
 						"5"
 					]
 				}
@@ -27,12 +27,12 @@
 			"response": []
 		},
 		{
-			"name": "API de récupération des fires",
+			"name": "API de récupération des firetrucks",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/fires",
+					"raw": "http://localhost:8080/api/firetrucks",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -40,20 +40,20 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fires"
+						"firetrucks"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "API d'ajout d'un fire",
+			"name": "API d'ajout d'un firetruck",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 2,\r\n    \"locationX\": 45.756751408054555,\r\n    \"locationY\": 4.888760974042827,\r\n    \"intensity\": 100\r\n}",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"capacity\": 20.0,\r\n    \"waterRate\": 5.0,\r\n    \"speed\": 8.0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -61,7 +61,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/fires",
+					"raw": "http://localhost:8080/api/firetrucks",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -69,20 +69,20 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fires"
+						"firetrucks"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "API d'update de fire selon son id",
+			"name": "API d'update de firetruck selon son id",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 100,\r\n    \"locationX\": 4.0,\r\n    \"locationY\": 9.0,\r\n    \"intensity\": 15\r\n}",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"capacity\": 30.0,\r\n    \"waterRate\": 6.0,\r\n    \"speed\": 5.0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -90,7 +90,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/fires/1",
+					"raw": "http://localhost:8080/api/firetrucks/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -98,7 +98,7 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fires",
+						"firetrucks",
 						"1"
 					]
 				}
@@ -106,12 +106,12 @@
 			"response": []
 		},
 		{
-			"name": "API de suppression d'un fire selon son id",
+			"name": "API de suppression d'un firetruck selon son id",
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/fires/5",
+					"raw": "http://localhost:8080/api/firetrucks/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -119,13 +119,12 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fires",
-						"5"
+						"firetrucks",
+						"1"
 					]
 				}
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

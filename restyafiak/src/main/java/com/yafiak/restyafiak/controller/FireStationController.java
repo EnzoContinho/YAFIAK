@@ -38,7 +38,6 @@ public class FireStationController {
 		Optional<FireStation> fireStationOptional = fireStationRepository.findById(id);
 		if (!fireStationOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		// fireStation.setId(id); pourquoi set l'id ?
 		fireStationRepository.save(fireStation);
 		return ResponseEntity.noContent().build();
 	}

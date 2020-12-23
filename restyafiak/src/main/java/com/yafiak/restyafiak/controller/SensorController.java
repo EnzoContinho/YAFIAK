@@ -38,7 +38,6 @@ public class SensorController {
 		Optional<Sensor> SensorOptional = SensorRepository.findById(id);
 		if (!SensorOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		// Sensor.setId(id);
 		SensorRepository.save(Sensor);
 		return ResponseEntity.noContent().build();
 	}

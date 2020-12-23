@@ -1,17 +1,17 @@
 {
 	"info": {
 		"_postman_id": "4bdc7bc3-155b-4b74-8853-8a6078593148",
-		"name": "FireStation",
+		"name": "Firestation",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "API de récupération d'une fireStation selon son id",
+			"name": "API de récupération d'une firestation selon son id",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/fireStations/5",
+					"raw": "http://localhost:8080/api/firestations/5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -19,7 +19,7 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fireStations",
+						"firestations",
 						"5"
 					]
 				}
@@ -27,12 +27,12 @@
 			"response": []
 		},
 		{
-			"name": "API de récupération des fireStations",
+			"name": "API de récupération des firestation",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/fireStations",
+					"raw": "http://localhost:8080/api/firestations",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -40,20 +40,20 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fireStations"
+						"firestations"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "API d'ajout d'un fireStation",
+			"name": "API d'ajout d'un firestation",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"SDIS Villeurbanne Est\",\r\n    \"locationX\": 45.74544849395493,\r\n    \"locationY\": 4.887125885280681\r\n}",
+					"raw": "{\r\n    \"id\": 2,\r\n    \"name\": \"SDIS Villeurbanne Est\",\r\n    \"locationX\": 45.76966070815725,\r\n    \"locationY\": 4.894793839829759\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -61,7 +61,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/fireStations",
+					"raw": "http://localhost:8080/api/firestations",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -69,14 +69,14 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fireStations"
+						"firestations"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "API d'update de fireStation selon son id",
+			"name": "API d'update de firestation selon son id",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -90,7 +90,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/fireStations/5",
+					"raw": "http://localhost:8080/api/firestations/5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -98,7 +98,7 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fireStations",
+						"firestations",
 						"5"
 					]
 				}
@@ -106,12 +106,12 @@
 			"response": []
 		},
 		{
-			"name": "API de suppression d'une fireStation selon son id",
+			"name": "API de suppression d'une firestation selon son id",
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/api/fireStations/5",
+					"raw": "http://localhost:8080/api/firestations/5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -119,13 +119,12 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"fireStations",
+						"firestations",
 						"5"
 					]
 				}
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
