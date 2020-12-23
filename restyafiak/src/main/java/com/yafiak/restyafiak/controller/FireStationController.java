@@ -17,34 +17,34 @@ public class FireStationController {
 	@Autowired
 	private FireStationRepository fireStationRepository;
 	
-	@GetMapping("api/fireStations")
+	@GetMapping("api/firestations")
     public List<FireStation> getFireStations() {
         return fireStationRepository.findAll();
     }
 	
-	@GetMapping("api/fireStations/{id}")
+	@GetMapping("api/firestations/{id}")
 	@ResponseBody
     public Optional<FireStation> getFireStationById(@PathVariable Long id) {
         return fireStationRepository.findById(id);
     }
 	
-	@PostMapping("api/fireStations")
+	@PostMapping("api/firestations")
 	public FireStation createFireStation(@RequestBody FireStation fireStation) {
 		return fireStationRepository.save(fireStation);
 	}
 	
-	@PutMapping("api/fireStations/{id}")
-	public ResponseEntity<Object> updateFire(@RequestBody FireStation fireStation, @PathVariable long id) {
+	@PutMapping("api/firestations/{id}")
+	public ResponseEntity<Object> updateFireStation(@RequestBody FireStation fireStation, @PathVariable long id) {
 		Optional<FireStation> fireStationOptional = fireStationRepository.findById(id);
 		if (!fireStationOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		fireStation.setId(id);
+		// fireStation.setId(id); pourquoi set l'id ?
 		fireStationRepository.save(fireStation);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@DeleteMapping("api/fireStations/{id}")
-	public void deleteFire(@PathVariable long id) {
+	@DeleteMapping("api/firestations/{id}")
+	public void deleteFireStation(@PathVariable long id) {
 		fireStationRepository.deleteById(id);
 	}
 	

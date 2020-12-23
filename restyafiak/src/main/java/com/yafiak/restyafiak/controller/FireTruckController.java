@@ -34,17 +34,17 @@ public class FireTruckController {
 	}
 	
 	@PutMapping("api/fireTrucks/{id}")
-	public ResponseEntity<Object> updateFireTrucks(@RequestBody FireTruck fireTruck, @PathVariable long id) {
+	public ResponseEntity<Object> updateFireTruck(@RequestBody FireTruck fireTruck, @PathVariable long id) {
 		Optional<FireTruck> fireTrucksOptional = fireTruckRepository.findById(id);
 		if (!fireTrucksOptional.isPresent())
 			return ResponseEntity.notFound().build();
-		fireTruck.setId(id);
+		// fireTruck.setId(id);
 		fireTruckRepository.save(fireTruck);
 		return ResponseEntity.noContent().build();
 	}
 	
 	@DeleteMapping("api/fireTrucks/{id}")
-	public void deleteFireTrucks(@PathVariable long id) {
+	public void deleteFireTruck(@PathVariable long id) {
 		fireTruckRepository.deleteById(id);
 	}
 	

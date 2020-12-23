@@ -7,7 +7,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_FIRESTATION_FIS")
+@Table(name = "T_FIRESTATION_FST")
 public class FireStation implements Serializable {
 
 	/**
@@ -17,37 +17,29 @@ public class FireStation implements Serializable {
 	
 	
 	@Id
-	@Column(name="FIS_ID", unique=true, nullable=false)
+	@Column(name="FST_ID", unique=true, nullable=false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name="FIS_NAME", columnDefinition="varchar", nullable=false)
+	@Column(name="FST_NAME", columnDefinition="varchar", nullable=false)
 	private String name;
 	
-	@Column(name="FIS_LOCATIONX", columnDefinition="real", nullable=false)
-	private double locationX;
+	@Column(name="FST_LAT", columnDefinition="real", nullable=false)
+	private double latitude;
 	
-	@Column(name="FIS_LOCATIONY", columnDefinition="real", nullable=false)
-	private double locationY;
+	@Column(name="FST_LONG", columnDefinition="real", nullable=false)
+	private double longitude;
 	
 	@ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-        name = "J_FIRE_FIRESTATION", 
+        name = "J_FIRESTATION_SENSOR", 
         joinColumns = { @JoinColumn(name="FIRESTATION_ID") }, 
-        inverseJoinColumns = { @JoinColumn(name="FIRE_ID") }
+        inverseJoinColumns = { @JoinColumn(name="SENSOR_ID") }
     )
-	Set<Fire> fires = new HashSet<>();
+	Set<Sensor> sensors = new HashSet<>();
 	
 	@OneToMany(mappedBy="fireStation")
     private Set<FireTruck> fireTrucks;
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -57,28 +49,28 @@ public class FireStation implements Serializable {
 		this.name = name;
 	}
 
-	public double getLocationX() {
-		return locationX;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setLocationX(double locationX) {
-		this.locationX = locationX;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
-	public double getLocationY() {
-		return locationY;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setLocationY(double locationY) {
-		this.locationY = locationY;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
-	public Set<Fire> getFires() {
-		return fires;
+	public Set<Sensor> getSensors() {
+		return sensors;
 	}
 
-	public void setFires(Set<Fire> fires) {
-		this.fires = fires;
+	public void setSensors(Set<Sensor> sensors) {
+		this.sensors = sensors;
 	}
 
 	public Set<FireTruck> getFireTrucks() {
@@ -87,6 +79,10 @@ public class FireStation implements Serializable {
 
 	public void setFireTrucks(Set<FireTruck> fireTrucks) {
 		this.fireTrucks = fireTrucks;
+	}
+
+	public Long getId() {
+		return id;
 	}
 	
 }

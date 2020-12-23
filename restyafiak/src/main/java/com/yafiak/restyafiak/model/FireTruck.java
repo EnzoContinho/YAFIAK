@@ -5,7 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_FIRETRUCK_FIT")
+@Table(name = "T_FIRETRUCK_FTR")
 public class FireTruck implements Serializable {
 
 	/**
@@ -14,29 +14,55 @@ public class FireTruck implements Serializable {
 	private static final long serialVersionUID = -356829351657437356L;
 	
 	@Id
-	@Column(name="FIT_ID", unique=true, nullable=false)
+	@Column(name="FTR_ID", unique=true, nullable=false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name="FIT_CAPACITY", columnDefinition="real", nullable=false)
+	@Column(name="FTR_NAME", columnDefinition="VARCHAR(30)", nullable=false)
+	private String name;
+	
+	@Column(name="FTR_LAT", columnDefinition="REAL", nullable=false)
+	private double latitude;
+	
+	@Column(name="FTR_LONG", columnDefinition="REAL", nullable=false)
+	private double longitude;
+	
+	@Column(name="FTR_CAPACITY", columnDefinition="REAL", nullable=false)
 	private double capacity;
 	
-	@Column(name="FIT_RATE", columnDefinition="real", nullable=false)
+	@Column(name="FTR_RATE", columnDefinition="REAL", nullable=false)
 	private double waterRate;
-	
-	@Column(name="FIT_SPEED", columnDefinition="real", nullable=false)
-	private double speed;
 
 	@ManyToOne
-    @JoinColumn(name="FIT_FIRESTATION_ID")
+    @JoinColumn(name="FTR_FIRESTATION_ID")
     private FireStation fireStation;
 	
-	public Long getId() {
-		return id;
+	@ManyToOne
+	@JoinColumn(name="FTR_SENSOR_ID")
+	private Sensor sensor;
+
+	public String getName() {
+		return name;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public double getCapacity() {
@@ -55,12 +81,16 @@ public class FireTruck implements Serializable {
 		this.waterRate = waterRate;
 	}
 
-	public double getSpeed() {
-		return speed;
+	public FireStation getFireStation() {
+		return fireStation;
 	}
 
-	public void setSpeed(double speed) {
-		this.speed = speed;
+	public void setFireStation(FireStation fireStation) {
+		this.fireStation = fireStation;
+	}
+
+	public Long getId() {
+		return id;
 	}
 	
 }

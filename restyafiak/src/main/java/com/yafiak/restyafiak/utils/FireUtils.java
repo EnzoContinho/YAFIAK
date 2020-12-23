@@ -5,7 +5,7 @@ import java.util.List;
 import java.lang.Math;
 
 import com.yafiak.restyafiak.controller.FireStationController;
-import com.yafiak.restyafiak.model.Fire;
+import com.yafiak.restyafiak.model.Sensor;
 import com.yafiak.restyafiak.model.FireStation;
 
 public final class FireUtils {
@@ -14,10 +14,10 @@ public final class FireUtils {
 		throw new IllegalStateException("Class d'outils");
 	}
 	
-	public static List<FireStation> findNearestFireStations(FireStationController controller, Fire fire) {
+	/*public static List<FireStation> findNearestFireStations(FireStationController controller, Sensor sensor) {
 		List<FireStation> fireStations = controller.getFireStations();
-		double xFire = fire.getLocationX();
-		double yFire = fire.getLocationY();
+		double sensorLatitude = sensor.getLatitude();
+		double sensorLongitude = sensor.getLongitude();
 		keepTheNearestOne(xFire, yFire, fireStations);
 		return fireStations;
 	}
@@ -47,6 +47,6 @@ public final class FireUtils {
 				index = i;
 		}
 		return index;
-	}
+	}*/
 	
 }
