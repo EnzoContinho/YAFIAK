@@ -6,8 +6,11 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "T_FIRESTATION_FST")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "sensors", "fireTrucks"})
 public class FireStation implements Serializable {
 
 	/**
@@ -30,7 +33,7 @@ public class FireStation implements Serializable {
 	@Column(name="FST_LONG", columnDefinition="real", nullable=false)
 	private double longitude;
 	
-	@ManyToMany(cascade = { CascadeType.ALL })
+	@ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
     @JoinTable(
         name = "J_FIRESTATION_SENSOR", 
         joinColumns = { @JoinColumn(name="FIRESTATION_ID") }, 
@@ -38,7 +41,7 @@ public class FireStation implements Serializable {
     )
 	Set<Sensor> sensors = new HashSet<>();
 	
-	@OneToMany(mappedBy="fireStation")
+	@OneToMany(mappedBy="fireStation", fetch = FetchType.LAZY)
     private Set<FireTruck> fireTrucks;
 
 	public String getName() {

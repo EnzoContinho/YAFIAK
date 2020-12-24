@@ -6,12 +6,15 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "T_SENSOR_SEN")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "fireStations", "fireTrucks"})
 public class Sensor implements Serializable {
 
 	/**
-	 * Class Fire : represent a fire in the database
+	 * Class Sensor : represent a sensor in the database
 	 */
 	private static final long serialVersionUID = 9115552225103191557L;
 	

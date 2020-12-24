@@ -88,6 +88,14 @@ public class FireTruck implements Serializable {
 	public void setFireStation(FireStation fireStation) {
 		this.fireStation = fireStation;
 	}
+	
+	public Sensor getSensor() {
+		return sensor;
+	}
+
+	public void setSensor(Sensor sensor) {
+		this.sensor = sensor;
+	}
 
 	public Long getId() {
 		return id;
