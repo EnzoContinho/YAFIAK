@@ -12,7 +12,7 @@ class MapService {
     */
 
     constructor() {
-        this.fireList = new Array();
+        this.sensorList = new Array();
         this.map = new Map();
     }
 
@@ -20,16 +20,16 @@ class MapService {
         this.apiEntryPoint = entryPoint;
     }
 
-    setFireList(list) {
-        this.fireList = list;
+    setSensorList(list) {
+        this.sensorList = list;
     }
 
-    getFireList(id) {
-        return this.fireList[id];
+    getSensorList(id) {
+        return this.sensorList[id];
     }
 
-    getFireListSize() {
-        return this.fireList.length;
+    getSensorListSize() {
+        return this.sensorList.length;
     } 
 
     setFireStationList(list) {
@@ -44,8 +44,32 @@ class MapService {
         return this.fireStationList.length;
     } 
 
+    setFireTruckList(list) {
+        this.fireTruckList = list;
+    }
+
+    getFireTruckList(id) {
+        return this.fireTruckList[id];
+    }
+
+    getFireTruckListSize() {
+        return this.fireTruckList.length;
+    } 
+
     getMap() {
         return this.map;
+    }
+
+    formatTrucks(JSON) {
+        var formattedTrucks;
+        formattedTrucks += "<br>----------------------------<br>";
+        JSON.forEach(truck => {
+            formattedTrucks += "ID camion : " + truck.id + "<br>";
+            formattedTrucks += "Nom camion : " + truck.name + "<br>";
+            formattedTrucks += "Capacité camion : " + truck.capacity + "<br>";
+            formattedTrucks += "----------------------------<br>";
+        });
+        return formattedTrucks;
     }
 }
 
