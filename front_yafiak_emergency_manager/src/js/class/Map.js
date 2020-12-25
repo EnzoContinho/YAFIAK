@@ -6,23 +6,29 @@ class Map {
 
     /**
     * @param {any} map
-    * @param {fireList[]} fireList
+    * @param {sensorList[]} sensorList
     * @param {fireStationList[]} fireStationList
+    * @param {fireTruckList[]} fireTruckList 
     * @param {string} accessToken
     */
 
     constructor() {
         this.accessToken = "pk.eyJ1IjoiZW56b2NvbnRpbmhvIiwiYSI6ImNrNmkyYjVzdjFnM3IzZW52N21ydmgydG8ifQ.t2TaKZvtBCCrGvyLM2UjJA";
-        this.fireList = new Array();
+        this.sensorList = new Array();
         this.fireStationList = new Array();
+        this.fireTruckList= new Array();
     }
 
-    addListFire(fireList){
-        this.fireList = fireList;
+    addListSensor(sensorList){
+        this.sensorList = sensorList;
     }
 
     addListFireStation(fireStationList){
         this.fireStationList = fireStationList;
+    }
+
+    addListFireTruck(fireTruckList){
+        this.fireTruckList = fireTruckList;
     }
 
     render() {

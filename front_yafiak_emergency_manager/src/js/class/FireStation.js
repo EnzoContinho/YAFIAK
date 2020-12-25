@@ -8,21 +8,21 @@
     /**
      * @param {string} id
      * @param {string} name 
-     * @param {string} locationX
-     * @param {string} locationY
+     * @param {string} latitude
+     * @param {string} longitude
      */
 
-   constructor(id, name, locationX, locationY) {
+   constructor(id, name, latitude, longitude) {
       this.id = id;
       this.name = name;
-      this.locationX = locationX;
-      this.locationY = locationY;
+      this.latitude = latitude;
+      this.longitude = longitude;
    }
 
    getId() { return this.id; }
    getName() { return this.name; }
-   getLocationX() { return this.locationX; }
-   getLocationY() { return this.locationY; }
+   getLatitude() { return this.latitude; }
+   getLongitude() { return this.longitude; }
 }
 
  export { FireStation };
