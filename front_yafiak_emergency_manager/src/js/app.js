@@ -1,114 +1,155 @@
 import { MapService } from './service/MapService.js';
-import { Fire } from './class/Fire.js';
+import { Sensor } from './class/Sensor.js';
 import { FireStation } from './class/FireStation.js';
+import { FireTruck } from './class/FireTruck.js';
 
 window.onload = function(){
 
-    var JSON_FIRES;
+    var JSON_SENSORS;
     var JSON_FIRESTATIONS;
+    var JSON_FIRETRUCKS;
 
-    // Open a new connection to get all fires
-    var requestFIRES = new XMLHttpRequest();
-    requestFIRES.open('GET', 'http://localhost:8080/api/fires', false);
+    // Open a new connection to get all sensors
+    var requestSENSORS = new XMLHttpRequest();
+    requestSENSORS.open('GET', 'http://localhost:8080/api/sensors', false);
 
-    // Open a new connection to get all fireStations
+    // Open a new connection to get all firestations
     var requestFIRESTATIONS = new XMLHttpRequest();
-    requestFIRESTATIONS.open('GET', 'http://localhost:8080/api/fireStations', false);
+    requestFIRESTATIONS.open('GET', 'http://localhost:8080/api/firestations', false);
 
-    requestFIRES.onload = function () {
-        JSON_FIRES = JSON.parse(this.response);
+    // Open a new connection to get all firetrucks
+    var requestFIRETRUCKS = new XMLHttpRequest();
+    requestFIRETRUCKS.open('GET', 'http://localhost:8080/api/firetrucks', false);
+
+
+    requestSENSORS.onload = function () {
+        JSON_SENSORS = JSON.parse(this.response);
     }
 
     requestFIRESTATIONS.onload = function () {
         JSON_FIRESTATIONS = JSON.parse(this.response);
     }
 
+    requestFIRETRUCKS.onload = function () {
+        JSON_FIRETRUCKS = JSON.parse(this.response);
+    }
+
     // Send requests
-    requestFIRES.send();
+    requestSENSORS.send();
     requestFIRESTATIONS.send();
+    requestFIRETRUCKS.send();
 
     var mapService = new MapService();
     var map = mapService.getMap();
-    var tmpFireList = new Array();
+    var tmpSensorsList = new Array();
     var tmpFireStationList = new Array();
+    var tmpFireTruckList = new Array();
 
-    // TRAITEMENT SUR LES FIRES
-    for (let i = 0; i < JSON_FIRES.length; i++) {
-        var object = JSON_FIRES[i];
+
+    // TRAITEMENT SUR LES SENSORS
+    for (let i = 0; i < JSON_SENSORS.length; i++) {
+        var object = JSON_SENSORS[i];
         var id = object.id;
-        var locationX = object.locationX;
-        var locationY = object.locationY;
+        var lX = object.lX;
+        var cY = object.cY;
+        var latitude = object.latitude;
+        var longitude = object.longitude;
         var intensity = object.intensity;
 
-        tmpFireList.push(
-            new Fire(id,locationX,locationY,intensity)
+        tmpSensorsList.push(
+            new Sensor(id,lX,cY,latitude,longitude,intensity)
         );
 
-        mapService.setFireList(tmpFireList);
-        mapService.getMap().addListFire(tmpFireList);
+        mapService.setSensorList(tmpSensorsList);
+        mapService.getMap().addListSensor(tmpSensorsList);
     }
 
     map.render();
 
-    // TRAITEMENT SUR LES FIRES
-    for (let i = 0; i < mapService.getFireListSize(); i++) {
-        var fire = mapService.getFireList(i);
-        console.log(fire);
-        L.marker([fire.getLocationX(),fire.getLocationY()], {
-            icon: new L.Icon({
-                iconUrl: 'src/img/fire.png',
-                iconSize: [25, 25],
-                shadowUrl: '',
-                shadowSize: [0, 0]
-            })
-        }).bindPopup(
-            '<p><b> ID : ' + fire.getId() + ' </b>, ('
-            + fire.getLocationX() + ';'
-            + fire.getLocationY() + '), <b> INTENSITY : '
-            + fire.getIntensity() + '</b></p>'
-        ).addTo(map.getMap());
+    for (let i = 0; i < mapService.getSensorListSize(); i++) {
+        var sensor = mapService.getSensorList(i);
+        var intensity = sensor.getIntensity();
 
-        var color;
-        if(fire.getIntensity() < 33) {
-            color = 'yellow';
-        } else if(fire.getIntensity() < 66 && fire.getIntensity() > 33) {
-            color = 'orange';
-        } else {
-            color = 'red';
+        if (intensity > 0) { //capteur, feu en cours
+
+            L.marker([sensor.getLatitude(),sensor.getLongitude()], {
+                icon: new L.Icon({
+                    iconUrl: 'src/img/fire.png',
+                    iconSize: [25, 25],
+                    shadowUrl: '',
+                    shadowSize: [0, 0]
+                })
+            }).bindPopup(
+                '<p><b> FEU EN COURS ! ID : ' + sensor.getId() + ' </b>, ('
+                + sensor.getLatitude() + ';'
+                + sensor.getLongitude() + '), <b> INTENSITY : '
+                + intensity + '</b></p>'
+            ).addTo(map.getMap());
+
+            var color;
+            if(intensity < 33) {
+                color = 'yellow';
+            } else if(intensity < 66 && intensity > 33) {
+                color = 'orange';
+            } else {
+                color = 'red';
+            }
+            
+            L.circle([sensor.getLatitude(),sensor.getLongitude()], {
+                color: color,
+                fillColor: color,
+                fillOpacity: 0.5,
+                radius: intensity*(300/100)
+            }).addTo(map.getMap());
+
+        } else { //capteur, pas de feu en cours
+
+            L.marker([sensor.getLatitude(),sensor.getLongitude()], {
+                icon: new L.Icon({
+                    iconUrl: 'src/img/sensor.png',
+                    iconSize: [25, 25],
+                    shadowUrl: '',
+                    shadowSize: [0, 0]
+                })
+            }).bindPopup(
+                '<p><b> RAS ! ID : ' + sensor.getId() + ' </b>, ('
+                + sensor.getLatitude() + ';'
+                + sensor.getLongitude() + '), <b> INTENSITY : '
+                + intensity + '</b></p>'
+            ).addTo(map.getMap());
         }
         
-        var associatedCircle = L.circle([fire.getLocationX(),fire.getLocationY()], {
-            color: color,
-            fillColor: color,
-            fillOpacity: 0.5,
-            radius: 50+fire.getIntensity()*(300/100)
-        }).addTo(map.getMap());
     }
 
-    
     // TRAITEMENT SUR LES FIRESTATIONS
     for (let i = 0; i < JSON_FIRESTATIONS.length; i++) {
         var object = JSON_FIRESTATIONS[i];
         var id = object.id;
         var name = object.name;
-        var locationX = object.locationX;
-        var locationY = object.locationY;
+        var latitude = object.latitude;
+        var longitude = object.longitude;
 
         tmpFireStationList.push(
-            new FireStation(id,name,locationX,locationY)
+            new FireStation(id,name,latitude,longitude)
         );
 
         mapService.setFireStationList(tmpFireStationList);
         mapService.getMap().addListFireStation(tmpFireStationList);
     }
 
-
-    // TRAITEMENT SUR LES FIRESTATIONS
     for (let i = 0; i < mapService.getFireStationListSize(); i++) {
         var fireStation = mapService.getFireStationList(i);
-        console.log(fireStation);
 
-        L.marker([fireStation.getLocationX(),fireStation.getLocationY()], {
+        var JSON_FIRETRUCKSbyFIRESTATIONID;
+        var requestFIRETRUCKSbyFIRESTATIONID = new XMLHttpRequest();
+        requestFIRETRUCKSbyFIRESTATIONID.open('GET', 'http://localhost:8080/api/firetrucks/firestationId/' + fireStation.getId(), false);
+        requestFIRETRUCKSbyFIRESTATIONID.onload = function () {
+            JSON_FIRETRUCKSbyFIRESTATIONID = JSON.parse(this.response);
+        }
+        requestFIRETRUCKSbyFIRESTATIONID.send();
+        var formattedTrucks = mapService.formatTrucks(JSON_FIRETRUCKSbyFIRESTATIONID);
+
+        L.marker([fireStation.getLatitude(),fireStation.getLongitude()], {
             icon: new L.Icon({
                 iconUrl: 'src/img/firestation.png',
                 iconSize: [50, 50],
@@ -118,10 +159,57 @@ window.onload = function(){
         }).bindPopup(
             '<p><b> ID : ' + fireStation.getId() + ', '
             + fireStation.getName() + ' </b>, ('
-            + fireStation.getLocationX() + '; '
-            + fireStation.getLocationY() + ')</p>'
+            + fireStation.getLatitude() + '; '
+            + fireStation.getLongitude() + ') '
+            + '<br> <b>Camions associés à cette firestation : </b><br>'
+            + formattedTrucks + '</p>'
         ).addTo(map.getMap());
 
+    };
+
+    // TRAITEMENT SUR LES FIRETRUCKS
+    for (let i = 0; i < JSON_FIRETRUCKS.length; i++) {
+        var object = JSON_FIRETRUCKS[i];
+        var id = object.id;
+        var name = object.name;
+        var latitude = object.latitude;
+        var longitude = object.longitude;
+        var capacity = object.capacity;
+        var waterRate = object.waterRate;
+        var fireStation = object.fireStation;
+
+        tmpFireTruckList.push(
+            new FireTruck(id,name,latitude,longitude,capacity,waterRate,fireStation)
+        );
+
+        mapService.setFireTruckList(tmpFireTruckList);
+        mapService.getMap().addListFireTruck(tmpFireTruckList);
+    }
+
+    for (let i = 0; i < mapService.getFireTruckListSize(); i++) {
+        var fireTruck = mapService.getFireTruckList(i);
+
+        if (fireTruck.getFireStation().latitude == fireTruck.getLatitude() && fireTruck.getFireStation().longitude == fireTruck.getLongitude()) {
+            console.log("Camion garé");     
+        } else {
+            console.log("Camion non garé");
+            L.marker([fireTruck.getLatitude(),fireTruck.getLongitude()], {
+                icon: new L.Icon({
+                    iconUrl: 'src/img/' + fireTruck.getIcon(),
+                    iconSize: [40, 40],
+                    shadowUrl: '',
+                    shadowSize: [0, 0]
+                })
+            }).bindPopup(
+                '<p><b> ID : ' + fireTruck.getId() + ', '
+                + fireTruck.getName() + ' </b>, ('
+                + fireTruck.getLatitude() + '; '
+                + fireTruck.getLongitude() + '), Capacité : '
+                + fireTruck.getCapacity() + ', Débit : '
+                + fireTruck.getWaterRate() + ', ID caserne : '
+                + fireTruck.getFireStation().id + '</p>'
+            ).addTo(map.getMap()); 
+        }
     };
     
 };
