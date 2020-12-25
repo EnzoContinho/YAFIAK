@@ -28,6 +28,12 @@ public class FireTruckController {
         return fireTruckRepository.findById(id);
     }
 	
+	@GetMapping("api/firetrucks/firestationId/{firestationId}")
+	@ResponseBody
+    public List<FireTruck> getFireTruckByFireStationId(@PathVariable Long firestationId) {
+        return fireTruckRepository.findFireTrucksByFireStationId(firestationId);
+    }
+	
 	@PostMapping("api/firetrucks")
 	public FireTruck createFireTruck(@RequestBody FireTruck fireTruck) {
 		return fireTruckRepository.save(fireTruck);
