@@ -39,10 +39,10 @@ public class FireStation implements Serializable {
         joinColumns = { @JoinColumn(name="FIRESTATION_ID") }, 
         inverseJoinColumns = { @JoinColumn(name="SENSOR_ID") }
     )
-	Set<Sensor> sensors = new HashSet<>();
+	private Set<Sensor> sensors = new HashSet<>();
 	
 	@OneToMany(mappedBy="fireStation", fetch = FetchType.LAZY)
-    private Set<FireTruck> fireTrucks;
+    private Set<FireTruck> fireTrucks = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -86,6 +86,14 @@ public class FireStation implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+	
+	public double getTotalCapicity() {
+		double totalCapacity = 0;
+		for (FireTruck ft: this.fireTrucks) {
+			totalCapacity += ft.getCapacity();
+		}
+		return totalCapacity;
 	}
 	
 }

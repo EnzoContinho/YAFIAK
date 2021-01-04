@@ -27,11 +27,19 @@ public class FireTruck implements Serializable {
 	@Column(name="FTR_LONG", columnDefinition="REAL", nullable=false)
 	private double longitude;
 	
+	/**
+	 * Use to determine in the assignment part whether a truck is a big one or a small one
+	 * This is a crucial piece of information for the algorithm to determine which truck will
+	 * be in charge of a fire according to its intensity
+	 */
 	@Column(name="FTR_CAPACITY", columnDefinition="REAL", nullable=false)
-	private double capacity;
+	private double capacity; // Liters
 	
+	/**
+	 * Use to determine in the simulation part the time required for a truck to switch off a fire
+	 */
 	@Column(name="FTR_RATE", columnDefinition="REAL", nullable=false)
-	private double waterRate;
+	private double waterRate; // Liters/minute
 
 	@ManyToOne
     @JoinColumn(name="FTR_FIRESTATION_ID")

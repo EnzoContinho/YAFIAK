@@ -42,7 +42,7 @@ public class Sensor implements Serializable {
     private Set<FireStation> fireStations = new HashSet<>();
 
 	@OneToMany(mappedBy="sensor")
-	private Set<FireTruck> fireTrucks;
+	private Set<FireTruck> fireTrucks = new HashSet<>();
 	
 	public int getlX() {
 		return lX;
@@ -90,6 +90,14 @@ public class Sensor implements Serializable {
 
 	public void setFireStations(Set<FireStation> fireStations) {
 		this.fireStations = fireStations;
+	}
+
+	public Set<FireTruck> getFireTrucks() {
+		return fireTrucks;
+	}
+
+	public void setFireTrucks(Set<FireTruck> fireTrucks) {
+		this.fireTrucks = fireTrucks;
 	}
 
 	public Long getId() {
