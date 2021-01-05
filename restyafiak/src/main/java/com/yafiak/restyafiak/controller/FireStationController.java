@@ -13,7 +13,7 @@ import com.yafiak.restyafiak.repository.FireStationRepository;
 
 @RestController
 public class FireStationController {
-
+	
 	@Autowired
 	private FireStationRepository fireStationRepository;
 	

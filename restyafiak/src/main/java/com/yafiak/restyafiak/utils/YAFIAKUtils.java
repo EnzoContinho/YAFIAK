@@ -43,8 +43,10 @@ public final class YAFIAKUtils {
 		double capacityRequired = sensorIntensity * waterNeeded;
 		List<FireTruck> fireTrucks = new ArrayList<>();
 		for (FireStation fs: fireStations) {
-			for (FireTruck ft: fs.getFireTrucks())
-				fireTrucks.add(ft);
+			for (FireTruck ft: fs.getFireTrucks()) {
+				if (ft.getSensor() == null)
+					fireTrucks.add(ft);
+			}
 		}
 		keepTheMostRelevantFireTrucks(capacityRequired, fireTrucks);
 		return new HashSet<FireTruck>(fireTrucks);

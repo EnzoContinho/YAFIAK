@@ -23,6 +23,9 @@ public class Sensor implements Serializable {
 	@Column(name="SEN_ID", unique=true, nullable=false)
     private Long id;
 	
+	@Column(name="SEN_NAME", columnDefinition="varchar(100)", nullable=false)
+	private String name;
+	
 	@Column(name="SEN_X", columnDefinition="integer", nullable=false)
 	private int lX;
 	
@@ -44,6 +47,14 @@ public class Sensor implements Serializable {
 	@OneToMany(mappedBy="sensor")
 	private Set<FireTruck> fireTrucks = new HashSet<>();
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public int getlX() {
 		return lX;
 	}

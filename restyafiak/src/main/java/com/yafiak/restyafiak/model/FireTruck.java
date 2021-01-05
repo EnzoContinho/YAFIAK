@@ -18,7 +18,7 @@ public class FireTruck implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name="FTR_NAME", columnDefinition="VARCHAR(30)", nullable=false)
+	@Column(name="FTR_NAME", columnDefinition="VARCHAR(100)", nullable=false)
 	private String name;
 	
 	@Column(name="FTR_LAT", columnDefinition="REAL", nullable=false)
@@ -40,7 +40,7 @@ public class FireTruck implements Serializable {
 	 */
 	@Column(name="FTR_RATE", columnDefinition="REAL", nullable=false)
 	private double waterRate; // Liters/minute
-
+	
 	@ManyToOne
     @JoinColumn(name="FTR_FIRESTATION_ID")
     private FireStation fireStation;

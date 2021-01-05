@@ -4,11 +4,8 @@ import com.yafiak.restyafiak.model.FireStation;
 import com.yafiak.restyafiak.model.FireTruck;
 import com.yafiak.restyafiak.model.Sensor;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +18,8 @@ public class SensorController {
 
 	@Autowired
 	private SensorRepository SensorRepository;
+	@Autowired
+	private FireStationController fireSationController;
 	
 	@GetMapping("api/sensors")
     public List<Sensor> getSensors() {
@@ -44,33 +43,45 @@ public class SensorController {
 		Sensor sensorToUpdate = null;
 		// We try to find out the right sensor
 		for (Sensor s: sensors) {
-			if (s.getlX() == sensor.getlX() && s.getcY() == sensor.getcY())
+			if (s.getlX() == sensor.getlX() && s.getcY() == sensor.getcY()) {
 				sensorToUpdate = s;
+				break;
+			}
 		}
 		// If the sensor exists
 		if (sensorToUpdate != null) {
+			int savedIntensity = sensorToUpdate.getIntensity();
+			int newIntensity = sensor.getIntensity();
 			// If a fire has been switched off
-			if (sensor.getIntensity() == 0) {
+			if (newIntensity == 0) {
 				// Update intensity
-				sensorToUpdate.setIntensity(sensor.getIntensity());
+				sensorToUpdate.setIntensity(newIntensity);
 				// Delete associations
-				sensorToUpdate.setFireStations(new HashSet<FireStation>());
-				sensorToUpdate.setFireTrucks(new HashSet<FireTruck>());
+				for (FireStation fs: sensorToUpdate.getFireStations()) {
+					fs.removeSensor(sensorToUpdate);
+				}
+				for (FireTruck ft: sensorToUpdate.getFireTrucks()) {
+					ft.setSensor(null);
+				}
 			}
 			// If it is a simple update of the intensity
-			if (sensor.getIntensity() > 0 && sensor.getIntensity() != sensorToUpdate.getIntensity()) {
+			if (savedIntensity != 0 && newIntensity > 0 && newIntensity != savedIntensity) {
 				// Update intensity
 				sensorToUpdate.setIntensity(sensor.getIntensity());
 			}
 			// If a fire is detected
-			if (sensor.getIntensity() > 0 && sensorToUpdate.getIntensity() == 0) {
+			if (savedIntensity == 0 && newIntensity > 0) {
 				// Update intensity
 				sensorToUpdate.setIntensity(sensor.getIntensity());
 				// Creation of the associations
-				Set<FireStation> associatedFireStations = YAFIAKUtils.findNearestFireStations(new FireStationController(), sensor);
-				sensorToUpdate.setFireStations(associatedFireStations);
-				Set<FireTruck> associatedFireTrucks = YAFIAKUtils.deployFireTrucks(sensorToUpdate.getFireStations(), sensor);
-				sensorToUpdate.setFireTrucks(associatedFireTrucks);
+				sensorToUpdate.setFireStations(YAFIAKUtils.findNearestFireStations(this.fireSationController, sensor));
+				for (FireStation fs: sensorToUpdate.getFireStations()) {
+					fs.addSensor(sensorToUpdate);
+				}
+				sensorToUpdate.setFireTrucks(YAFIAKUtils.deployFireTrucks(sensorToUpdate.getFireStations(), sensor));
+				for (FireTruck ft: sensorToUpdate.getFireTrucks()) {
+					ft.setSensor(sensorToUpdate);
+				}
 			}
 			// Saving the update
 			SensorRepository.save(sensorToUpdate);

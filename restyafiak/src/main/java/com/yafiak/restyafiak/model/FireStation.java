@@ -18,13 +18,12 @@ public class FireStation implements Serializable {
 	 */
 	private static final long serialVersionUID = -4030225403789127661L;
 	
-	
 	@Id
 	@Column(name="FST_ID", unique=true, nullable=false)
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 	
-	@Column(name="FST_NAME", columnDefinition="varchar", nullable=false)
+	@Column(name="FST_NAME", columnDefinition="varchar(100)", nullable=false)
 	private String name;
 	
 	@Column(name="FST_LAT", columnDefinition="real", nullable=false)
@@ -75,6 +74,17 @@ public class FireStation implements Serializable {
 	public void setSensors(Set<Sensor> sensors) {
 		this.sensors = sensors;
 	}
+	
+	public void addSensor(Sensor sensor) {
+		this.sensors.add(sensor);
+	}
+	
+	public void removeSensor(Sensor sensor) {
+		for (Sensor s: this.sensors) {
+			if (s.getlX() == sensor.getlX() && s.getcY() == sensor.getcY())
+				this.sensors.remove(s);
+		}
+	}
 
 	public Set<FireTruck> getFireTrucks() {
 		return fireTrucks;
@@ -91,7 +101,8 @@ public class FireStation implements Serializable {
 	public double getTotalCapicity() {
 		double totalCapacity = 0;
 		for (FireTruck ft: this.fireTrucks) {
-			totalCapacity += ft.getCapacity();
+			if (ft.getSensor() == null)
+				totalCapacity += ft.getCapacity();
 		}
 		return totalCapacity;
 	}
