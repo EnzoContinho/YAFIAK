@@ -48,6 +48,10 @@ public class FireTruck implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="FTR_SENSOR_ID")
 	private Sensor sensor;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="FTR_JOURNEY_ID", referencedColumnName = "JOU_ID")
+	private Journey journey;
 
 	public String getName() {
 		return name;
@@ -103,6 +107,14 @@ public class FireTruck implements Serializable {
 
 	public void setSensor(Sensor sensor) {
 		this.sensor = sensor;
+	}
+
+	public Journey getJourney() {
+		return journey;
+	}
+
+	public void setJourney(Journey journey) {
+		this.journey = journey;
 	}
 
 	public Long getId() {

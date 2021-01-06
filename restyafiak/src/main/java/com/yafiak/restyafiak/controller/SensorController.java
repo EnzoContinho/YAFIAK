@@ -2,8 +2,11 @@ package com.yafiak.restyafiak.controller;
 
 import com.yafiak.restyafiak.model.FireStation;
 import com.yafiak.restyafiak.model.FireTruck;
+import com.yafiak.restyafiak.model.Journey;
 import com.yafiak.restyafiak.model.Sensor;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.yafiak.restyafiak.repository.SensorRepository;
 import com.yafiak.restyafiak.utils.YAFIAKUtils;
+import com.yafiak.restyafiak.utils.http.YAFIAKHttpClient;
 
 @RestController
 public class SensorController {
@@ -62,6 +66,7 @@ public class SensorController {
 				}
 				for (FireTruck ft: sensorToUpdate.getFireTrucks()) {
 					ft.setSensor(null);
+					ft.setJourney(null);
 				}
 			}
 			// If it is a simple update of the intensity
@@ -80,7 +85,26 @@ public class SensorController {
 				}
 				sensorToUpdate.setFireTrucks(YAFIAKUtils.deployFireTrucks(sensorToUpdate.getFireStations(), sensor));
 				for (FireTruck ft: sensorToUpdate.getFireTrucks()) {
+					// Start and end points for the journey
+					String departurePoint = Double.toString(ft.getFireStation().getLongitude())
+							+","
+							+Double.toString(ft.getFireStation().getLatitude());
+					String arrivalPoint = Double.toString(sensorToUpdate.getLongitude())
+							+","
+							+Double.toString(sensorToUpdate.getLatitude());
+					// Get the journey from the OSRM API
+					YAFIAKHttpClient httpClient = new YAFIAKHttpClient();
+					String waypoints = "";
+					try {
+						waypoints = httpClient.getPath(departurePoint, arrivalPoint);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					if (waypoints != "")
+						waypoints = Base64.getEncoder().encodeToString(waypoints.getBytes());
+					// Set the sensor and a journey
 					ft.setSensor(sensorToUpdate);
+					ft.setJourney(new Journey(waypoints, ft));
 				}
 			}
 			// Saving the update
