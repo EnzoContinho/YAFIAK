@@ -177,9 +177,11 @@ window.onload = function(){
         var capacity = object.capacity;
         var waterRate = object.waterRate;
         var fireStation = object.fireStation;
+        var sensor = object.sensor;
+        var itinerary = object.itinerary;
 
         tmpFireTruckList.push(
-            new FireTruck(id,name,latitude,longitude,capacity,waterRate,fireStation)
+            new FireTruck(id,name,latitude,longitude,capacity,waterRate,fireStation,sensor,itinerary)
         );
 
         mapService.setFireTruckList(tmpFireTruckList);
@@ -209,6 +211,49 @@ window.onload = function(){
                 + fireTruck.getWaterRate() + ', ID caserne : '
                 + fireTruck.getFireStation().id + '</p>'
             ).addTo(map.getMap()); 
+
+            // calcul de son itinéraire 
+
+            // si le firesensor id associé est vide il rentre à la caserne, sinon il part en intervention  
+            if (fireTruck.getSensor().id != null) {
+                var itinerary = fireTruck.getItinerary();
+                var pointList = [];
+                // point initial
+                pointList.push(new L.LatLng(fireTruck.getLatitude(),fireTruck.getLongitude()));
+                // points route
+                itinerary.forEach(waypoint => {
+                    pointList.push(new L.LatLng(waypoint[1], waypoint[0]));
+                });
+                //point final
+                pointList.push(new L.LatLng(fireTruck.getSensor().latitude,fireTruck.getSensor().longitude));
+
+                var firstpolyline = new L.Polyline(pointList, {
+                    color: 'red',
+                    weight: 3,
+                    opacity: 0.5,
+                    smoothFactor: 1
+                });
+                firstpolyline.addTo(map.getMap());
+            } else {
+                var itinerary = fireTruck.getItinerary();
+                var pointList = [];
+                // point initial
+                pointList.push(new L.LatLng(fireTruck.getLatitude(),fireTruck.getLongitude()));
+                // points route
+                itinerary.forEach(waypoint => {
+                    pointList.push(new L.LatLng(waypoint[1], waypoint[0]));
+                });
+                //point final
+                pointList.push(new L.LatLng(fireTruck.getFireStation().latitude,fireTruck.getFireStation().longitude));
+
+                var firstpolyline = new L.Polyline(pointList, {
+                    color: 'green',
+                    weight: 1,
+                    opacity: 0.5,
+                    smoothFactor: 1
+                });
+                firstpolyline.addTo(map.getMap());
+            }
         }
     };
     
