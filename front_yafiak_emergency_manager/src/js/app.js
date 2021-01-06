@@ -178,10 +178,10 @@ window.onload = function(){
         var waterRate = object.waterRate;
         var fireStation = object.fireStation;
         var sensor = object.sensor;
-        var itinerary = object.itinerary;
+        var journey = object.journey;
 
         tmpFireTruckList.push(
-            new FireTruck(id,name,latitude,longitude,capacity,waterRate,fireStation,sensor,itinerary)
+            new FireTruck(id,name,latitude,longitude,capacity,waterRate,fireStation,sensor,journey)
         );
 
         mapService.setFireTruckList(tmpFireTruckList);
@@ -215,13 +215,13 @@ window.onload = function(){
             // calcul de son itinéraire 
 
             // si le firesensor id associé est vide il rentre à la caserne, sinon il part en intervention  
-            if (fireTruck.getSensor().id != null) {
-                var itinerary = fireTruck.getItinerary();
+            if (fireTruck.getSensor() != null) {
+                var journey = fireTruck.getJourney();
                 var pointList = [];
                 // point initial
                 pointList.push(new L.LatLng(fireTruck.getLatitude(),fireTruck.getLongitude()));
                 // points route
-                itinerary.forEach(waypoint => {
+                JSON.parse(journey["waypoints"]).forEach(waypoint => {
                     pointList.push(new L.LatLng(waypoint[1], waypoint[0]));
                 });
                 //point final
@@ -235,12 +235,12 @@ window.onload = function(){
                 });
                 firstpolyline.addTo(map.getMap());
             } else {
-                var itinerary = fireTruck.getItinerary();
+                var journey = fireTruck.getJourney();
                 var pointList = [];
                 // point initial
                 pointList.push(new L.LatLng(fireTruck.getLatitude(),fireTruck.getLongitude()));
-                // points route
-                itinerary.forEach(waypoint => {
+                // points route inversés à l'extinction côté simulation
+                journey.forEach(waypoint => {
                     pointList.push(new L.LatLng(waypoint[1], waypoint[0]));
                 });
                 //point final
