@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS influxdb;
+CREATE TABLE influxdb.firedata ( idFireData INT PRIMARY KEY AUTO_INCREMENT, FD_LocationX INT NOT NULL, FD_LocationY INT NOT NULL, FD_Intensity INT NOT NULL );
+ALTER TABLE `influxdb`.`firedata` ADD INDEX `FD_LocationX` (`FD_LocationX`);
+ALTER TABLE `influxdb`.`firedata` ADD INDEX `FD_LocationY` (`FD_LocationY`);

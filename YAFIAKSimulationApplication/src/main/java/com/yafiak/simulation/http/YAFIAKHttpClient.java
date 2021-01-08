@@ -94,7 +94,7 @@ public class YAFIAKHttpClient {
 			}
 			
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				System.out.println("\t--- [STEP 6/6] Echec de connecion à l'API distante");
+				System.out.println("\t--- [STEP 6/6] Echec de connexion à l'API distante");
 				System.exit(0);
 			} else {
 				System.out.println("\t--- [STEP 6/6] Connexion à l'API distante réussie");
