@@ -10,8 +10,8 @@ public class YAFIAKSimulationApplication {
 		
 		YAFIAKSingleton yafiak = YAFIAKSingleton.getInstance();
 		
-		// TODO Initialize the different threads
 		Thread restAPI = new Thread(new RestMainThread());
+		restAPI.start();
 		
 		long endTimeMillis = System.currentTimeMillis();
 		System.out.println("###### --- [PRÊT] L'application YAFIAK Simulation a démarré en "+Long.toString(endTimeMillis-startTimeMillis)+" millisecondes --- ######");

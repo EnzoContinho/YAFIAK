@@ -4,12 +4,6 @@ import java.io.Serializable;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
-/**
- * 
- * @author Hugo Ferrer
- * Sensor POJO class
- *
- */
 public class Sensor {
 
 	private int x;
@@ -51,6 +45,7 @@ public class Sensor {
 	public String toJSON() {
 		Jsonb jsonb = JsonbBuilder.create();
 	    String result = jsonb.toJson(this);
+		return result;
 	}
 	
 }
