@@ -2,7 +2,7 @@ import serial, time
 import threading,random
 import multiprocessing as mp
 
-# CoONSTANT
+# CONSTANT
 SERIALPORT = "COM7"
 BAUDRATE = 115200
 
@@ -10,8 +10,7 @@ BAUDRATE = 115200
 nValue = 0
 sX,sY = 0,0
 ser = serial.Serial()
-bOk = mp.Value("i",True)
-
+semaphoreSendingData = mp.Semaphore(1)
 # Function in charge of initialize the serial port
 def initUART():     
     ser.port=SERIALPORT
@@ -26,29 +25,30 @@ def initUART():
     print("----- Socket's initializing -----")
     try:
             ser.open()
-            print(" Port: "+SERIALPORT)
-            print(" Baudrate: "+str(BAUDRATE))
-            print(" Byte size: "+str(serial.EIGHTBITS))
-            print(" Parity: "+ serial.PARITY_NONE)
-            print(" Number of stop bits: "+str(serial.STOPBITS_ONE))
-            print(" Timeout: NONE")
-            print(" Flow control: NONE")
+            print("-> Port: "+SERIALPORT)
+            print("-> Baudrate: "+str(BAUDRATE))
+            print("-> Byte size: "+str(serial.EIGHTBITS))
+            print("-> Parity: "+ serial.PARITY_NONE)
+            print("-> Number of stop bits: "+str(serial.STOPBITS_ONE))
+            print("-> Timeout: NONE")
+            print("-> Flow control: NONE")
     except serial.SerialException:
-            print("Serial {} port not available".format(SERIALPORT))
+            print("-> Serial {} port not available".format(SERIALPORT))
             exit()
 
 # Function that send data from sever to micobit via the serial port
 def sendUARTMessage(msg):
     print("----- Data sended -----")
-    print("msg")
+    print("-> "+msg)
     ser.write(msg.encode())
 
 # Function that take in charge the data receive on serial port
 def receiveUARTMessage():
         while ser.isOpen() : 
-                if (ser.inWaiting() > 0): # if incoming bytes are waiting 
-                    bOk.value = True
-                time.sleep(1)
+            if (ser.inWaiting() > 0): # if incoming bytes are waiting 
+                if str(ser.read(3)) == "b'FIN'":
+                    semaphoreSendingData.release()
+               
 # Function to get the data to send
 # return a string in format :4 digits | 1 digit | 1 digit | 3 digit
 def getDataToSend():
@@ -84,12 +84,11 @@ if __name__ == "__main__" :
     serverSerial_thread.start()
     print("----- Program starts -----")
     while(True):
-        if(bOk.value):
-            # Get data
-            sDataToSend = getDataToSend()
-            if sDataToSend != "":
-                # Send data
-                sendUARTMessage(sDataToSend)
-                # Block sending
-                bOk.value = False
-        time.sleep(1)
+        # Ask to send data
+        semaphoreSendingData.acquire()
+        # Get data
+        sDataToSend = getDataToSend()
+        if sDataToSend != "":
+            # Send data
+            sendUARTMessage(sDataToSend)
+            # Block sending
