@@ -1,20 +1,26 @@
 package com.yafiak.simulation;
 
+import java.util.concurrent.Semaphore;
+
 import com.yafiak.simulation.restservice.RestMainThread;
 
 public class YAFIAKSimulationApplication {
-
+	
+	private static Semaphore singletonPrivateMutex = new Semaphore(0);
+	private static Semaphore mainPrivateMutex = new Semaphore(0);
+	public static boolean isReady = false;
+	
 	public static void main(String[] args) {
 		long startTimeMillis = System.currentTimeMillis();
-		System.out.println("###### --- [DEMARRAGE] L'application YAFIAK Simulation démarre --- ######");
+		System.out.println("[THREAD][YAFIAKSimulation]: ###### --- [DEMARRAGE] L'application YAFIAK Simulation dÃ©marre --- ######");
 		
-		YAFIAKSingleton yafiak = YAFIAKSingleton.getInstance();
-		
-		Thread restAPI = new Thread(new RestMainThread());
+		YAFIAKSingleton.getInstance(singletonPrivateMutex);
+		Thread restAPI = new Thread(new RestMainThread(singletonPrivateMutex, mainPrivateMutex));
 		restAPI.start();
 		
-		long endTimeMillis = System.currentTimeMillis();
-		System.out.println("###### --- [PRÊT] L'application YAFIAK Simulation a démarré en "+Long.toString(endTimeMillis-startTimeMillis)+" millisecondes --- ######");
+		while(!mainPrivateMutex.tryAcquire());
+		
+		System.out.println("[THREAD][YAFIAKSimulation]: ###### --- [PRÃŠT] L'application YAFIAK Simulation a dÃ©marrÃ© en "+ Long.toString(System.currentTimeMillis() - startTimeMillis) +" millisecondes --- ######");
 	}
 
 }

@@ -22,7 +22,7 @@ public class YAFIAKHttpClient {
 	
 	public YAFIAKHttpClient() {
 		System.out.println("[YAFIAKHttpClient] --- Initialisation du client HTTP ---");
-		System.out.println("\t[DEBUT] --- Vérification de l'état de l'API distante");
+		System.out.println("\t[DEBUT] --- VÃ©rification de l'Ã©tat de l'API distante");
 		
 		Properties properties = new Properties();
 		URL yafiak_http_properties = this.getClass().getClassLoader().getResource(CONFIGURATION_FILE);
@@ -31,26 +31,26 @@ public class YAFIAKHttpClient {
 		
 		try {
 			pathOfPropertyFile = Paths.get(yafiak_http_properties.toURI()).toFile();
-			System.out.println("\t--- [STEP 1/6] Fichier properties trouvé");
+			System.out.println("\t--- [STEP 1/6] Fichier properties trouvÃ©");
 		} catch (URISyntaxException e) {
-			System.out.println("\t--- [STEP 1/6] Fichier properties non trouvé");
+			System.out.println("\t--- [STEP 1/6] Fichier properties non trouvÃ©");
 			e.printStackTrace();
 		}
 		
 		try {
 			if (pathOfPropertyFile != null) {
 				propertyFile = new FileInputStream(pathOfPropertyFile.getAbsolutePath());
-				System.out.println("\t--- [STEP 2/6] Création du flux du fichier properties réussie");
+				System.out.println("\t--- [STEP 2/6] CrÃ©ation du flux du fichier properties rÃ©ussie");
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("\t--- [STEP 2/6] Echec de création du flux du fichier properties");
+			System.out.println("\t--- [STEP 2/6] Echec de crÃ©ation du flux du fichier properties");
 			e.printStackTrace();
 		}
 		
 		try {
 			if (propertyFile != null) {
 				properties.load(propertyFile);
-				System.out.println("\t--- [STEP 3/6] Fichier properties injecté avec succès dans l'application");
+				System.out.println("\t--- [STEP 3/6] Fichier properties injectÃ© avec succÃ¨s dans l'application");
 			}
 		} catch (IOException e) {
 			System.out.println("\t--- [STEP 3/6] Echec de l'injection du fichier properties dans l'application");
@@ -59,7 +59,7 @@ public class YAFIAKHttpClient {
 		
 		try {
 			url = new URL(properties.getProperty("yafiak.http.url"));
-			System.out.println("\t--- [STEP 4/6] Construction de l'URL réussie");
+			System.out.println("\t--- [STEP 4/6] Construction de l'URL rÃ©ussie");
 		} catch (MalformedURLException e) {
 			System.out.println("\t--- [STEP 4/6] Echec de construction de l'URL");
 			e.printStackTrace();
@@ -71,9 +71,9 @@ public class YAFIAKHttpClient {
 			
 			try {
 				connection = (HttpURLConnection) url.openConnection();
-				System.out.println("\t--- [STEP 5/6] Ouverture de la connexion à l'API distante...");
+				System.out.println("\t--- [STEP 5/6] Ouverture de la connexion Ã  l'API distante...");
 			} catch (IOException e) {
-				System.out.println("\t--- [STEP 5/6] Echec de l'ouverture de la connexion à l'API distante");
+				System.out.println("\t--- [STEP 5/6] Echec de l'ouverture de la connexion Ã  l'API distante");
 				e.printStackTrace();
 			}
 			
@@ -94,16 +94,16 @@ public class YAFIAKHttpClient {
 			}
 			
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				System.out.println("\t--- [STEP 6/6] Echec de connexion à l'API distante");
+				System.out.println("\t--- [STEP 6/6] Echec de connexion Ã  l'API distante");
 				System.exit(0);
 			} else {
-				System.out.println("\t--- [STEP 6/6] Connexion à l'API distante réussie");
+				System.out.println("\t--- [STEP 6/6] Connexion Ã  l'API distante rÃ©ussie");
 			}
 			
 		}
 		
-		System.out.println("\t[FIN] --- Vérification de l'état de l'API distante effectuée correctement");
-		System.out.println("[YAFIAKHttpClient] --- Initialisation du client HTTP effectuée correctement ---");
+		System.out.println("\t[FIN] --- VÃ©rification de l'Ã©tat de l'API distante effectuÃ©e correctement");
+		System.out.println("[YAFIAKHttpClient] --- Initialisation du client HTTP effectuÃ©e correctement ---");
 	}
 	
 }

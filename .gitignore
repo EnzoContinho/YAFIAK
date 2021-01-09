@@ -1,4 +1,5 @@
 /.metadata/
+/Servers/
 
 /restyafiak/HELP.md
 /restyafiak/target/
@@ -33,3 +34,37 @@
 
 ### VS Code ###
 /restyafiak/.vscode/
+
+/YAFIAKSimulationApplication/HELP.md
+/YAFIAKSimulationApplication/target/
+/YAFIAKSimulationApplication/!.mvn/wrapper/maven-wrapper.jar
+/YAFIAKSimulationApplication/!**/src/main/**/target/
+/YAFIAKSimulationApplication/!**/src/test/**/target/
+
+### STS ###
+/YAFIAKSimulationApplication/.apt_generated
+/YAFIAKSimulationApplication/.classpath
+/YAFIAKSimulationApplication/.factorypath
+/YAFIAKSimulationApplication/.project
+/YAFIAKSimulationApplication/.settings
+/YAFIAKSimulationApplication/.springBeans
+/YAFIAKSimulationApplication/.sts4-cache
+
+### IntelliJ IDEA ###
+/YAFIAKSimulationApplication/.idea
+/YAFIAKSimulationApplication/*.iws
+/YAFIAKSimulationApplication/*.iml
+/YAFIAKSimulationApplication/*.ipr
+
+### NetBeans ###
+/YAFIAKSimulationApplicationk/nbproject/private/
+/YAFIAKSimulationApplication/nbbuild/
+/YAFIAKSimulationApplication/dist/
+/YAFIAKSimulationApplication/nbdist/
+/YAFIAKSimulationApplication/.nb-gradle/
+/YAFIAKSimulationApplication/build/
+/YAFIAKSimulationApplication/!**/src/main/**/build/
+/YAFIAKSimulationApplication/!**/src/test/**/build/
+
+### VS Code ###
+/YAFIAKSimulationApplication/.vscode/

@@ -1,9 +1,5 @@
 package com.yafiak.simulation.model;
 
-import java.io.Serializable;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
-
 public class Sensor {
 
 	private int x;
@@ -40,12 +36,6 @@ public class Sensor {
 
 	public void setIntensity(int intensity) {
 		this.intensity = intensity;
-	}
-	
-	public String toJSON() {
-		Jsonb jsonb = JsonbBuilder.create();
-	    String result = jsonb.toJson(this);
-		return result;
 	}
 	
 }

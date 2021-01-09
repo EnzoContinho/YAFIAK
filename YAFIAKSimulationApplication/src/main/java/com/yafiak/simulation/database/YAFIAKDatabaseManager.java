@@ -21,7 +21,6 @@ import com.yafiak.simulation.model.Sensor;
 public class YAFIAKDatabaseManager {
 
 	private final String CONFIGURATION_FILE = "yafiak.db.properties";
-	private final String IMPORT_FILE = "import.sql";
 
 	private String host;
 	private String username;
@@ -31,60 +30,71 @@ public class YAFIAKDatabaseManager {
 
 	public YAFIAKDatabaseManager() {
 
-		System.out.println("[YAFIAKDatabaseManager] --- Initialisation du gestionnaire de la base de donnÈes ---");
-		System.out.println("\t[DEBUT] --- Chargement du fichier des propriÈtÈs de la base de donnÈes et connexion");
+		System.out.println("[YAFIAKDatabaseManager] --- Initialisation du gestionnaire de la base de donn√©es ---");
+		System.out.println("\t[DEBUT] --- Chargement du fichier des propri√©t√©s de la base de donn√©es");
 
 		Properties properties = new Properties();
+		
 		URL yafiak_db_properties = this.getClass().getClassLoader().getResource(CONFIGURATION_FILE);
+		if (yafiak_db_properties == null) {
+			System.out.println("[YAFIAKDatabaseManager][ERROR] --- Le fichier de yafiak.db.properties n'existe pas ---");
+			System.exit(0);
+		}
+		
 		File pathOfPropertyFile = null;
 		FileInputStream propertyFile = null;
 
 		try {
 			pathOfPropertyFile = Paths.get(yafiak_db_properties.toURI()).toFile();
-			System.out.println("\t--- [STEP 1/4] Fichier properties trouvÈ");
+			System.out.println("\t--- [STEP 1/6] Fichier properties trouv√©");
 		} catch (URISyntaxException e) {
-			System.out.println("\t--- [STEP 1/4] Fichier properties non trouvÈ");
+			System.out.println("\t--- [STEP 1/6] Fichier properties non trouv√©");
 			e.printStackTrace();
 		}
 
 		try {
 			if (pathOfPropertyFile != null) {
 				propertyFile = new FileInputStream(pathOfPropertyFile.getAbsolutePath());
-				System.out.println("\t--- [STEP 2/4] CrÈation du flux du fichier properties rÈussie");
+				System.out.println("\t--- [STEP 2/6] Cr√©ation du flux du fichier properties r√©ussie");
 			}
 		} catch (FileNotFoundException e) {
-			System.out.println("\t--- [STEP 2/4] Echec de crÈation du flux du fichier properties");
+			System.out.println("\t--- [STEP 2/6] Echec de cr√©ation du flux du fichier properties");
 			e.printStackTrace();
 		}
 
 		try {
 			if (propertyFile != null) {
 				properties.load(propertyFile);
-				System.out.println("\t--- [STEP 3/4] Fichier properties injectÈ avec succËs dans l'application");
+				System.out.println("\t--- [STEP 3/6] Fichier properties inject√© avec succ√®s dans l'application");
 			}
 		} catch (IOException e) {
-			System.out.println("\t--- [STEP 3/4] Echec de l'injection du fichier properties dans l'application");
+			System.out.println("\t--- [STEP 3/6] Echec de l'injection du fichier properties dans l'application");
 			e.printStackTrace();
 		}
 
 		host = properties.getProperty("yafiak.database.host");
 		username = properties.getProperty("yafiak.database.username");
 		password = properties.getProperty("yafiak.database.password");
+		
+		String importFile = null;
+		if (properties.getProperty("yafiak.database.import") != null)
+			importFile = properties.getProperty("yafiak.database.import");
 
 		try {
 			connection = DriverManager.getConnection(host, username, password);
-			System.out.println("\t--- [STEP 4/4] Connexion ‡ la base de donnÈes effectuÈe avec succËs");
+			System.out.println("\t--- [STEP 4/6] Connexion √† la base de donn√©es effectu√©e avec succ√®s");
 		} catch (SQLException e) {
-			System.out.println("\t--- [STEP 4/4] Echec de la connexion ‡ la base de donnÈes");
+			System.out.println("\t--- [STEP 4/6] Echec de la connexion √† la base de donn√©es");
 			e.printStackTrace();
 		}
 		
-		if (connection != null) {
+		if (importFile != null && connection != null) {
 			ScriptRunner sr = new ScriptRunner(connection);
-			URL import_file = this.getClass().getClassLoader().getResource(IMPORT_FILE);
+			URL import_file = this.getClass().getClassLoader().getResource(importFile);
 	        Reader reader = null;
 			try {
 				reader = new BufferedReader(new FileReader(Paths.get(import_file.toURI()).toFile().getAbsolutePath()));
+				System.out.println("\t--- [STEP 5/6] Chargement du script SQL de peuplement initial de la base de donn√©es");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (URISyntaxException e) {
@@ -92,27 +102,34 @@ public class YAFIAKDatabaseManager {
 			}
 			
 			if (reader != null) {
+				System.out.println("\t--- [STEP 6/6] Ex√©cution du script SQL de peuplement initial de la base de donn√©es");
 				sr.runScript(reader);
 			}
 		}
 		
-		System.out
-				.println("\t[FIN] --- Fin du chargement du fichier des propriÈtÈs de la base de donnÈes et connexion");
-		System.out.println(
-				"[YAFIAKDatabaseManager] --- Initialisation du gestionnaire de la base de donnÈes effectuÈe correctement ---");
+		System.out.println("\t[FIN] --- Fin du chargement du fichier des propri√©t√©s de la base de donn√©es");
+		System.out.println("[YAFIAKDatabaseManager] --- Initialisation du gestionnaire de la base de donn√©es effectu√©e correctement ---");
 	}
 
+	/**
+	 * The <code>getAll()</code> method allows to recover all the sensors in the database
+	 * @return
+	 * 	<code>List<Sensor></code>
+	 */
 	public List<Sensor> getAll() {
+		long startTime = System.currentTimeMillis();
 		List<Sensor> liste = new ArrayList<>();
 		Statement st;
 		try {
 			st = connection.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM T_SENSOR_SEN");
+			System.out.println("[YAFIAKDatabaseManager] --- R√©cup√©ration de tous les capteurs en base ---");
 			while (rs.next()) {
 				liste.add(new Sensor(rs.getInt(2),rs.getInt(3),rs.getInt(4)));
 			}
 			rs.close();
 			st.close();
+			System.out.println("[YAFIAKDatabaseManager] --- R√©sultat retourn√© en "+ Long.toString(System.currentTimeMillis()-startTime) +" millisecondes ---");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

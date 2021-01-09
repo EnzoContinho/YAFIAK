@@ -1,43 +1,60 @@
 package com.yafiak.simulation.restservice;
 
-import java.lang.System.Logger.Level;
-import java.net.URI;
-import javax.ws.rs.core.UriBuilder;
+import java.io.File;
+import java.util.concurrent.Semaphore;
 
-import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.logging.LoggingFeature;
-import org.glassfish.jersey.server.ResourceConfig;
+import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.startup.Tomcat;
 
 import com.yafiak.simulation.controller.SensorController;
 
 public class RestMainThread implements Runnable {
 	
-	public static final URI BASE_URI = getBaseURI();
-
-    private static URI getBaseURI() {
-        return UriBuilder.fromUri("http://localhost/api/").port(9991).build();
-    }
+	private static final int PORT = 8081;
+	
+	private Semaphore singletonMutex;
+	private Semaphore mainMutex;
+	
+	public RestMainThread() {;}
+	
+	public RestMainThread(Semaphore singletonMutex, Semaphore mainMutex) {
+		this.singletonMutex = singletonMutex;
+		this.mainMutex = mainMutex;
+	}
 	
 	public void run() {
-		ResourceConfig rc = new ResourceConfig();
-		rc.registerClasses(SensorController.class);
-		rc.property(LoggingFeature.LOGGING_FEATURE_LOGGER_LEVEL_SERVER, Level.WARNING.getName());
+		
+		while(!singletonMutex.tryAcquire());
+		
+		long startTime = System.currentTimeMillis();
+		System.out.println("[THREAD][REST API] --- [DEMARRAGE] L'API REST démarre ---");
+		
+		Tomcat tomcat = new Tomcat();
+		
+		tomcat.setPort(PORT);
+		tomcat.setHostname("localhost");
+		String appBase = ".";
+		tomcat.getHost().setAppBase(appBase);
+		
+		File docBase = new File(System.getProperty("java.io.tmpdir"));
+		Context context = tomcat.addContext("", docBase.getAbsolutePath());
+		
+		Class<SensorController> servletClass = SensorController.class;
+		Tomcat.addServlet(context, servletClass.getSimpleName(), servletClass.getName());
+		context.addServletMappingDecoded("/api/sensors/*", servletClass.getSimpleName());
 
 		try {
-			System.out.println(BASE_URI.toString());
-			HttpServer server = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, rc);
-			server.start();
-
-			System.out.println(String.format(
-					"Jersey app started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...",
-					BASE_URI, BASE_URI));
-
-			System.in.read();
-			server.shutdownNow();
-		} catch (Exception e) {
+			tomcat.start();
+		} catch (LifecycleException e) {
 			e.printStackTrace();
 		}
-
+		
+		System.out.println("[THREAD][REST API] --- Le serveur Tomcat est en écoute sur le port "+Integer.toString(PORT));
+		System.out.println("[THREAD][REST API] --- [PRÊT] Le service REST a démarré en "+ Long.toString(System.currentTimeMillis() - startTime) +" millisecondes ---");
+		mainMutex.release();
+		
+		tomcat.getServer().await();
+		
 	}
 }
