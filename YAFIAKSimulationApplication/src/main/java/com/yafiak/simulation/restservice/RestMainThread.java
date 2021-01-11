@@ -7,7 +7,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 
-import com.yafiak.simulation.controller.SensorController;
+import com.yafiak.simulation.controller.SensorServletController;
 
 public class RestMainThread implements Runnable {
 	
@@ -40,7 +40,7 @@ public class RestMainThread implements Runnable {
 		File docBase = new File(System.getProperty("java.io.tmpdir"));
 		Context context = tomcat.addContext("", docBase.getAbsolutePath());
 		
-		Class<SensorController> servletClass = SensorController.class;
+		Class<SensorServletController> servletClass = SensorServletController.class;
 		Tomcat.addServlet(context, servletClass.getSimpleName(), servletClass.getName());
 		context.addServletMappingDecoded("/api/sensors/*", servletClass.getSimpleName());
 

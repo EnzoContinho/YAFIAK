@@ -1,30 +1,37 @@
 package com.yafiak.simulation.controller;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+
 import com.yafiak.simulation.YAFIAKSingleton;
 import com.yafiak.simulation.database.YAFIAKDatabaseManager;
 
-public class SensorController extends HttpServlet {
+/**
+ * Sensor servlet controller class
+ * @author Hugo Ferrer
+ *
+ */
+public class SensorServletController extends HttpServlet {
 	
-	/**
-	 * Sensor controller class
-	 */
 	private static final long serialVersionUID = 763090170458183720L;
 	
 	private YAFIAKDatabaseManager yafiakDBManager;
 	private Gson gson;
 	
-	public SensorController() {
+	public SensorServletController() {
 		super();
 		yafiakDBManager = YAFIAKSingleton.getInstance().getDatabaseManager();
 		gson = new Gson();
 	}
 	
+	/**
+	 * Used when a client reach /api/sensors
+	 */
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		System.out.println("[THREAD][REST API] --- Un client a atteint /api/sensors ---");

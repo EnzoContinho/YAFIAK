@@ -12,19 +12,14 @@ public class YAFIAKSingleton {
 	private YAFIAKDatabaseManager dbManager;
 	private YAFIAKHttpClient httpClient;
 	
-	private YAFIAKSingleton() {
-		System.out.println("[INFO] --- Initialisation du singleton de l'application ---");
-		this.dbManager = new YAFIAKDatabaseManager();
-		this.httpClient = new YAFIAKHttpClient();
-		System.out.println("[INFO] --- Initialisation du singleton de l'application effectuée correctement ---");
-	}
+	private YAFIAKSingleton() {;}
 	
-	private YAFIAKSingleton(Semaphore mutex) {
+	private YAFIAKSingleton(Semaphore singletonMutex, Semaphore dbMutex) {
 		System.out.println("[INFO] --- Initialisation du singleton de l'application ---");
-		this.dbManager = new YAFIAKDatabaseManager();
+		this.dbManager = new YAFIAKDatabaseManager(dbMutex);
 		this.httpClient = new YAFIAKHttpClient();
 		System.out.println("[INFO] --- Initialisation du singleton de l'application effectuée correctement ---");
-		mutex.release();
+		singletonMutex.release();
 	}
 	
 	public static YAFIAKSingleton getInstance() {
@@ -38,13 +33,13 @@ public class YAFIAKSingleton {
 		}
 	}
 	
-	public static YAFIAKSingleton getInstance(Semaphore mutex) {
+	public static YAFIAKSingleton getInstance(Semaphore singletonMutex, Semaphore dbMutex) {
 		YAFIAKSingleton result = instance;
 		if (result != null)
 			return result;
 		synchronized(YAFIAKSingleton.class) {
 			if (instance == null)
-				instance = new YAFIAKSingleton(mutex);
+				instance = new YAFIAKSingleton(singletonMutex, dbMutex);
 			return instance;
 		}
 	}

@@ -14,23 +14,30 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Semaphore;
+
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import com.yafiak.simulation.model.Sensor;
 
 public class YAFIAKDatabaseManager {
-
+	
 	private final String CONFIGURATION_FILE = "yafiak.db.properties";
 
+	private Semaphore dbMutex;
+	
 	private String host;
 	private String username;
 	private String password;
 
 	private Connection connection;
 
-	public YAFIAKDatabaseManager() {
+	public YAFIAKDatabaseManager(Semaphore dbMutex) {
 
 		System.out.println("[YAFIAKDatabaseManager] --- Initialisation du gestionnaire de la base de données ---");
+		
+		this.dbMutex = dbMutex;
+		
 		System.out.println("\t[DEBUT] --- Chargement du fichier des propriétés de la base de données");
 
 		Properties properties = new Properties();
@@ -119,21 +126,32 @@ public class YAFIAKDatabaseManager {
 	public List<Sensor> getAll() {
 		long startTime = System.currentTimeMillis();
 		List<Sensor> liste = new ArrayList<>();
-		Statement st;
+		
 		try {
-			st = connection.createStatement();
+			while(!dbMutex.tryAcquire()); // critical section
+			
+			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM T_SENSOR_SEN");
+			
 			System.out.println("[YAFIAKDatabaseManager] --- Récupération de tous les capteurs en base ---");
-			while (rs.next()) {
+			
+			while (rs.next())
 				liste.add(new Sensor(rs.getInt(2),rs.getInt(3),rs.getInt(4)));
-			}
+			
 			rs.close();
 			st.close();
+			
+			dbMutex.release(); // critical section
+			
 			System.out.println("[YAFIAKDatabaseManager] --- Résultat retourné en "+ Long.toString(System.currentTimeMillis()-startTime) +" millisecondes ---");
 		} catch (SQLException e) {
+			System.out.println("[YAFIAKDatabaseManager][ERROR] --- La récupération des données en base a échoué ---");
 			e.printStackTrace();
 		}
+		
 		return liste;
 	}
+	
+	// TODO The function to update sensors
 
 }
