@@ -3,7 +3,37 @@ import { Sensor } from './class/Sensor.js';
 import { FireStation } from './class/FireStation.js';
 import { FireTruck } from './class/FireTruck.js';
 
+var mapService;
+var map;
+var tmpSensorsList;
+var tmpFireStationList;
+var tmpFireTruckList;
+var firstpolyline;
+
 window.onload = function(){
+    mapService = new MapService();
+    map = mapService.getMap();
+    map.render();
+    refreshFront();
+    setInterval(refreshFront, 10000);
+}
+
+function refreshFront() {
+    clean();
+    refresh();
+}
+
+function clean() {
+    tmpSensorsList = null;
+    tmpFireStationList = null;
+    tmpFireTruckList = null;
+    firstpolyline = null;
+    mapService.setSensorList(null);
+    mapService.setFireStationList(null);
+    mapService.setFireTruckList(null);
+}
+
+function refresh() {
 
     var JSON_SENSORS;
     var JSON_FIRESTATIONS;
@@ -39,11 +69,9 @@ window.onload = function(){
     requestFIRESTATIONS.send();
     requestFIRETRUCKS.send();
 
-    var mapService = new MapService();
-    var map = mapService.getMap();
-    var tmpSensorsList = new Array();
-    var tmpFireStationList = new Array();
-    var tmpFireTruckList = new Array();
+    tmpSensorsList = new Array();
+    tmpFireStationList = new Array();
+    tmpFireTruckList = new Array();
 
 
     // TRAITEMENT SUR LES SENSORS
@@ -63,8 +91,6 @@ window.onload = function(){
         mapService.setSensorList(tmpSensorsList);
         mapService.getMap().addListSensor(tmpSensorsList);
     }
-
-    map.render();
 
     for (let i = 0; i < mapService.getSensorListSize(); i++) {
         var sensor = mapService.getSensorList(i);
@@ -102,23 +128,7 @@ window.onload = function(){
                 radius: intensity*(300/100)
             }).addTo(map.getMap());
 
-        } else { //capteur, pas de feu en cours
-
-            L.marker([sensor.getLatitude(),sensor.getLongitude()], {
-                icon: new L.Icon({
-                    iconUrl: 'src/img/sensor.png',
-                    iconSize: [25, 25],
-                    shadowUrl: '',
-                    shadowSize: [0, 0]
-                })
-            }).bindPopup(
-                '<p><b> RAS ! ID : ' + sensor.getId() + ' </b>, ('
-                + sensor.getLatitude() + ';'
-                + sensor.getLongitude() + '), <b> INTENSITY : '
-                + intensity + '</b></p>'
-            ).addTo(map.getMap());
-        }
-        
+        } //else { }; capteur, pas de feu en cours
     }
 
     // TRAITEMENT SUR LES FIRESTATIONS
@@ -227,7 +237,7 @@ window.onload = function(){
                 //point final
                 pointList.push(new L.LatLng(fireTruck.getSensor().latitude,fireTruck.getSensor().longitude));
 
-                var firstpolyline = new L.Polyline(pointList, {
+                firstpolyline = new L.Polyline(pointList, {
                     color: 'red',
                     weight: 3,
                     opacity: 0.5,
@@ -246,7 +256,7 @@ window.onload = function(){
                 //point final
                 pointList.push(new L.LatLng(fireTruck.getFireStation().latitude,fireTruck.getFireStation().longitude));
 
-                var firstpolyline = new L.Polyline(pointList, {
+                firstpolyline = new L.Polyline(pointList, {
                     color: 'green',
                     weight: 1,
                     opacity: 0.5,
@@ -255,6 +265,6 @@ window.onload = function(){
                 firstpolyline.addTo(map.getMap());
             }
         }
-    };
+    }
     
 };
