@@ -56,11 +56,11 @@ def updateInfluxDBMySQL(locationX,locationY,intensityFire):
 # Function that take in charge the insertion of data on INFLUXDB
 def updateInfluxDBINFLUX(locationX,locationY,intensityFire):
     # Create Point
-    pointToInsert = influxdb_client.Point("CurrentFire").field("Fire("+str(locationX)+","+str(locationY)+")",int(intensityFire))
+    pointToInsert = influxdb_client.Point("CurrentFire").tag("Sensor","Sensor("+str(locationX)+","+str(locationY)+")").field("Location X",locationX).field("Location Y",locationY).field("Fire Intensity",intensityFire)
     print("----- Insertion in InfluxDB -----")
     print("-> Measurement : CurrentFire")
-    print("-> Field Name: Fire("+str(locationX)+","+str(locationY)+")")
-    print("-> Field Value: "+intensityFire)
+    print("-> tag Name: Fire("+str(locationX)+","+str(locationY)+")")
+    print("-> Value: "+intensityFire)
     # Write Point
     write_apiInfluxDB.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=pointToInsert)
 
