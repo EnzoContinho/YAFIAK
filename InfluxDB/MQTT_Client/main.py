@@ -2,7 +2,7 @@ import serial, time
 import threading,random
 import multiprocessing as mp
 import paho.mqtt.client as mqtt
-import mysql.connector
+#import mysql.connector
 import influxdb_client
 import datetime
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -10,19 +10,19 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 # CONSTANT
 INFLUXDB_BUCKET = "FireData"
 INFLUXDB_ORG = "YAFIAK"
-INFLUXDB_TOKEN = "1_oZenNoEJpRwAXH0k7yn3GT7DZOKf6f-hFHrBYoDrbZeyUILpDhvgdkIcjldSmQ4O-9HIuXTpNjgx2-0lqE6w=="
-INFLUXDB_URL="http://localhost:2003"
+INFLUXDB_TOKEN = "TxVr6LF2JCUTukDJ9sEBRA_0_KFQzPQT1Ksey7agcC6v_wNBWGRFND3dObyKwAVIbns0IHGWMgFzHKA-Hs1IIw=="
+INFLUXDB_URL="http://localhost:8086"
 IP_SERVER_MYSQL = "127.0.0.1"
-MYSQL_USER_NAME = "Mqtt_Client"
+"""MYSQL_USER_NAME = "Mqtt_Client"
 MYSQL_USER_PASSWORD = "dzZMBFabo6PMSpB8"
 MYSQL_DATABASE = "influxdb"
-connexionObjectMySQL = mysql.connector.connect(host=IP_SERVER_MYSQL,user=MYSQL_USER_NAME, password=MYSQL_USER_PASSWORD,database=MYSQL_DATABASE)
+connexionObjectMySQL = mysql.connector.connect(host=IP_SERVER_MYSQL,user=MYSQL_USER_NAME, password=MYSQL_USER_PASSWORD,database=MYSQL_DATABASE)"""
 NAME_MQTT_CLIENT_SUBSCRIBER = "MQTT InfluxDB Subscriber"
 MQTT_TOPIC = "Current_Fire"
 IP_MQTT_BROKER = "127.0.0.1"
 
 # GLOBAL
-cursorMySQL = connexionObjectMySQL.cursor()
+#cursorMySQL = connexionObjectMySQL.cursor()
 clientInfluxDB = influxdb_client.InfluxDBClient(url=INFLUXDB_URL,token=INFLUXDB_TOKEN,org=INFLUXDB_ORG)
 write_apiInfluxDB = clientInfluxDB.write_api(write_options=SYNCHRONOUS)
 semaphoreWaiting = mp.Semaphore(0)
@@ -56,7 +56,7 @@ def updateInfluxDBMySQL(locationX,locationY,intensityFire):
 # Function that take in charge the insertion of data on INFLUXDB
 def updateInfluxDBINFLUX(locationX,locationY,intensityFire):
     # Create Point
-    pointToInsert = influxdb_client.Point("CurrentFire").tag("Sensor","Sensor("+str(locationX)+","+str(locationY)+")").field("Location X",locationX).field("Location Y",locationY).field("Fire Intensity",intensityFire)
+    pointToInsert = influxdb_client.Point("CurrentFire").tag("Sensor","Sensor("+str(locationX)+","+str(locationY)+")").field("Location X",int(locationX)).field("Location Y",int(locationY)).field("Fire Intensity",int(intensityFire))
     print("----- Insertion in InfluxDB -----")
     print("-> Measurement : CurrentFire")
     print("-> tag Name: Fire("+str(locationX)+","+str(locationY)+")")
@@ -75,7 +75,7 @@ def on_message(client, userdata, message):
     sLocationY = msg.split("|")[2]
     sIntensity = msg.split("|")[3]
     # Update on the different base
-    updateInfluxDBMySQL(sLocationX,sLocationY,sIntensity)
+    #updateInfluxDBMySQL(sLocationX,sLocationY,sIntensity)
     updateInfluxDBINFLUX(sLocationX,sLocationY,sIntensity)
 
 

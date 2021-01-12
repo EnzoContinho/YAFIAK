@@ -83,20 +83,20 @@ radioSocket = radio
 radioSocket.on()
 while True:
     display.clear()
-    display.set_pixel(0, 0, 9)
+    display.set_pixel(0, 1, 9)
     bytesArrayDataUART = bytearray()
     idSensor = bytearray()
     radioSocket.config(length=RADIO_FRAME_LENGTH,data_rate=SENSOR_RECEIVER_BAUDRATE,address=0x75626974)
     # Si des données sont reçue en radio
     if(receiveRF(bytesArrayDataUART, 13)):
-        display.set_pixel(1, 0, 9)
+        display.set_pixel(1, 1, 9)
         sourceIP = getSourceRF(bytesArrayDataUART)
         destinationIP = getDestinationRF(bytesArrayDataUART)
         dataLength = getDataLengthRF(bytesArrayDataUART)
         idSensor = bytesArrayDataUART[9:13]
         # Récupération du baudrate de l'énvoyeur
         if checkIdentity(sourceIP, destinationIP):
-            display.set_pixel(2, 0, 9)
+            display.set_pixel(2, 1, 9)
             # On link nos deux cartes pour une communication monodirectionnelle
             radioSocket.config(address=int(hex(int(sourceIP.replace(".", ""))), 16))
             # Début de la communication
@@ -104,10 +104,10 @@ while True:
             while (receiveRF(bytesArrayDataRF, RADIO_FRAME_LENGTH)) == False:
                 sleep(1)
             # Envoie de l'acusé de réception
-            display.set_pixel(3, 0, 9)
+            display.set_pixel(3, 1, 9)
             sendDataToUART(idSensor+bytesArrayDataRF[9:32])
             sendRF(bytesArrayDataRF[9:32],sourceIP)
-            display.set_pixel(4, 0, 9)
+            display.set_pixel(4, 1, 9)
     else:
         display.set_pixel(1, 1, 0)
     sleep(1)

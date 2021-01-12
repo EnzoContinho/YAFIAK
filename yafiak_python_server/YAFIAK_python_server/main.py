@@ -6,7 +6,7 @@ import json
 import requests 
 
 # CONSTANT
-SERIALPORT = "COM9"
+SERIALPORT = "COM4"
 BAUDRATE = 115200
 API_SENSOR_URL = "http://localhost:8080/api/sensors"
 NAME_MQTT_CLIENT_PUBLISHER = "SP_EmergencyManager"
@@ -18,6 +18,8 @@ ser = serial.Serial()
 # Function that verify the good value of data received
 # return a boolean that correspond to the result
 def valuesCorrect(sIdFire,sLocationX,sLocationY,sFireIntensity):
+    if int(sIdFire) == 0 and int(sLocationX) == 0 and int(sLocationY) == 0 and int(sFireIntensity) == 0:
+        return True
     if sIdFire == "" or sLocationX == "" or sLocationY == "" or sFireIntensity == "":
         return False
     if int(sIdFire) <= 0 :
@@ -30,8 +32,14 @@ def valuesCorrect(sIdFire,sLocationX,sLocationY,sFireIntensity):
         return False
     return True
 
-# Function that use API to push data on apache server
+# Function that use API to push fire on apache server
 def pushFireHTTP(sLocationX,sLocationY,sFireIntensity):
+    headers = {"Content-Type": "application/json"}
+    paramForAPI = json.dumps({'lX': int(sLocationX), 'cY': int(sLocationY), 'intensity' : int(sFireIntensity)})
+    requests.put(url = API_SENSOR_URL, data = paramForAPI, headers=headers)
+
+# Function that use API to push End Transmission message on apache server
+def pushEndOfTransmissionHTTP():
     headers = {"Content-Type": "application/json"}
     paramForAPI = json.dumps({'lX': int(sLocationX), 'cY': int(sLocationY), 'intensity' : int(sFireIntensity)})
     requests.put(url = API_SENSOR_URL, data = paramForAPI, headers=headers)
@@ -87,14 +95,19 @@ def receiveUARTMessage():
             print("-> (string format) | id: "+sid+" LocationX: "+strLocationX+" LocationY: "+strLocationY+" Fire intensity: "+strFireIntensity)
             # Check the values
             if valuesCorrect(sid,strLocationX,strLocationY,strFireIntensity):
-                print("-> Data Correct")
-                # Publish on MQTT Brocker
-                print("----- Publish on MQTT BROKER (topic: "+MQTT_TOPIC+") -----")
-                client.publish(MQTT_TOPIC,sid+"|"+strLocationX+"|"+strLocationY+"|"+strFireIntensity)
-                # Push data on database with the API
-                print("----- Publish on APACHE -----")
-                pushFireHTTP(strLocationX,strLocationY,strFireIntensity)
-                # Increment the number of message received
+                # If it's end of transmission
+                if int(sid) == 0:
+                    print("0")
+                    #pushFireHTTP(strLocationX,strLocationY,strFireIntensity)
+                else:
+                    print("-> Data Correct")
+                    # Publish on MQTT Brocker
+                    print("----- Publish on MQTT BROKER (topic: "+MQTT_TOPIC+") -----")
+                    client.publish(MQTT_TOPIC,sid+"|"+strLocationX+"|"+strLocationY+"|"+strFireIntensity)
+                    # Push data on database with the API
+                    print("----- Publish on APACHE -----")
+                    #pushFireHTTP(strLocationX,strLocationY,strFireIntensity)
+                    # Increment the number of message received
                 nMessageReceived+= 1
             else:
                 print("-> Data Wrong")
