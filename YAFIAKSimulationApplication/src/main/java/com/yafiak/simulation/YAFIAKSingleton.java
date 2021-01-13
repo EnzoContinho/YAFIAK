@@ -12,6 +12,8 @@ public class YAFIAKSingleton {
 	private YAFIAKDatabaseManager dbManager;
 	private YAFIAKHttpClient httpClient;
 	
+	private boolean firesDetected = false;
+	
 	private YAFIAKSingleton() {;}
 	
 	private YAFIAKSingleton(Semaphore singletonMutex, Semaphore dbMutex) {
@@ -50,6 +52,14 @@ public class YAFIAKSingleton {
 	
 	public YAFIAKHttpClient getHttpClient() {
 		return this.httpClient;
+	}
+	
+	public boolean getFiresDetected() {
+		return this.firesDetected;
+	}
+	
+	public void setFiresDetected(boolean firesDetected) {
+		this.firesDetected = firesDetected;
 	}
 	
 }

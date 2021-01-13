@@ -9,6 +9,7 @@ import java.util.Map;
  */
 public class FireTruck {
 
+	private int id;
 	private double longitude;
 	private double latitude;
 	private double capacity;
@@ -16,15 +17,25 @@ public class FireTruck {
 	
 	private Map<String, double[]> waypoints;
 	
+	private String lastWaypointIndex;
+	private Sensor linkedSensor;
+	
 	public FireTruck() {;}
 	
-	public FireTruck(double longitude, double latitude, double capacity, double waterRate,
-					 Map<String, double[]> waypoints) {
+	public FireTruck(int id, double longitude, double latitude, double capacity, double waterRate,
+					 Map<String, double[]> waypoints, String lastWaypointIndex, Sensor linkedSensor) {
+		this.id = id;
 		this.latitude = longitude;
 		this.latitude = latitude;
 		this.capacity = capacity;
 		this.waterRate = waterRate;
 		this.waypoints = waypoints;
+		this.lastWaypointIndex = lastWaypointIndex;
+		this.linkedSensor = linkedSensor;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public double getLongitude() {
@@ -65,6 +76,26 @@ public class FireTruck {
 
 	public void setWaypoints(Map<String, double[]> waypoints) {
 		this.waypoints = waypoints;
+	}
+
+	public String getLastWaypointIndex() {
+		return lastWaypointIndex;
+	}
+
+	public Sensor getLinkedSensor() {
+		return linkedSensor;
+	}
+
+	public void setLinkedSensor(Sensor linkedSensor) {
+		this.linkedSensor = linkedSensor;
+	}
+	
+	public String toJSON() {
+		return "{"
+				+ "\"id\":"+this.id+","
+				+ "\"latitude\":"+this.latitude+","
+				+ "\"longitude\":"+this.longitude+","
+				+ "}";
 	}
 	
 }

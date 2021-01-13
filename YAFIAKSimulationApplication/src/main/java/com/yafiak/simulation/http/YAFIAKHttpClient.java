@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -24,7 +24,9 @@ import java.util.Properties;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.yafiak.simulation.YAFIAKSingleton;
 import com.yafiak.simulation.model.FireTruck;
+import com.yafiak.simulation.model.Sensor;
 
 /**
  * YAFIAK HTTP Client class
@@ -35,6 +37,7 @@ public class YAFIAKHttpClient {
 
 	private final String CONFIGURATION_FILE = "yafiak.http.properties";
 	private final String HTTP_GET = "GET";
+	private final String HTTP_POST = "POST";
 	private final String HTTP_USER_AGENT = "User-Agent";
 	
 	private URL url;
@@ -140,6 +143,7 @@ public class YAFIAKHttpClient {
 	 * 	<code>List<FireTruck></code>
 	 */
 	public List<FireTruck> getFireTrucks() {
+		long startTime = System.currentTimeMillis();
 		List<FireTruck> fireTrucks = new ArrayList<>();
 		
 		try {
@@ -189,7 +193,52 @@ public class YAFIAKHttpClient {
 			
 		}
 		
+		System.out.println("[YAFIAKHttpClient]: --- Les camions ont été récuprés ("
+				+fireTrucks.size()
+				+"), l'opération a été effectuée en "
+				+Long.toString(System.currentTimeMillis() - startTime)
+				+" milliseconde ---"
+		);
 		return fireTrucks;
+	}
+	
+	public void postFireTruck(FireTruck fireTruck) {
+		long startTime = System.currentTimeMillis();
+		try {
+			connection.setRequestMethod(HTTP_POST);
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+		}
+		
+		connection.setRequestProperty("Content-Type", "application/json; utf-8");
+		connection.setRequestProperty("Accept", "application/json");
+		connection.setDoOutput(true);
+		
+		int responseCode = 0;
+		
+		String body = fireTruck.toJSON();
+		
+		try(OutputStream os = connection.getOutputStream()) {
+		    byte[] input = body.getBytes("utf-8");
+		    os.write(input, 0, input.length);			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			connection.getResponseCode();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if (responseCode != HttpURLConnection.HTTP_OK) {
+			System.out.println("[YAFIAKHttpClient] --- Mise à jour du camion (id: "
+					+Integer.toString(fireTruck.getId())
+					+") réussie, opération effectuée en "
+					+Long.toString(System.currentTimeMillis() - startTime)+" milliseconde ---"
+			);
+		}
+		
 	}
 	
 	private void deserializeJSON(List<FireTruck> listToFill, StringBuffer apiResponse) {
@@ -199,24 +248,32 @@ public class YAFIAKHttpClient {
 			JSONObject jFireTruck = (JSONObject) jFireTrucks.get(i);
 			
 			if (jFireTruck.get("journey") != null) {
+				JSONObject jSensor = (JSONObject) jFireTruck.get("sensor");
 				JSONArray journeys = new JSONArray(
 					((JSONObject) jFireTruck.get("journey")).getString("waypoints")
 				);
 				
+				int id = jFireTruck.getInt("id");
 				double longitude = jFireTruck.getDouble("longitude");
 				double latitude = jFireTruck.getDouble("latitude");
 				double capacity = jFireTruck.getDouble("capacity");
 				double waterRate = jFireTruck.getDouble("waterRate");
 				
+				Sensor sensor = null;
+				if (jSensor != null) {
+					sensor = YAFIAKSingleton.getInstance().getDatabaseManager().getSensor(jSensor.getInt("cX"), jSensor.getInt("lY"));
+				}
+				
 				Map<String, double[]> journey = new HashMap<>();
 				
-				for (int k = 0; k < journeys.length(); k++) {
+				int k;
+				for (k = 0; k < journeys.length(); k++) {
 					JSONArray waypoint = (JSONArray) journeys.get(k);
 					double coordinates[] = {waypoint.getDouble(0), waypoint.getDouble(1)};
 					journey.put(Integer.toString(k), coordinates);
 				}
 				
-				listToFill.add(new FireTruck(longitude, latitude, capacity, waterRate, journey));
+				listToFill.add(new FireTruck(id, longitude, latitude, capacity, waterRate, journey, Integer.toString(k), sensor));
 			}
 		}
 	}

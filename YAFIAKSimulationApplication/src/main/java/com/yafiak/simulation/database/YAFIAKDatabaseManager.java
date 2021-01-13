@@ -123,20 +123,56 @@ public class YAFIAKDatabaseManager {
 	 * @return
 	 * 	<code>List<Sensor></code>
 	 */
-	public List<Sensor> getAll() {
+	public List<Sensor> getAll(boolean log) {
 		long startTime = System.currentTimeMillis();
 		List<Sensor> liste = new ArrayList<>();
 		
 		try {
+			if (log)
+				System.out.println("[YAFIAKDatabaseManager] --- Récupération de tous les capteurs en base... ---");
 			while(!dbMutex.tryAcquire()); // critical section
 			
 			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM T_SENSOR_SEN");
 			
-			System.out.println("[YAFIAKDatabaseManager] --- Récupération de tous les capteurs en base ---");
+			while (rs.next())
+				liste.add(new Sensor(rs.getInt(3),rs.getInt(2),rs.getInt(4)));
+			
+			rs.close();
+			st.close();
+			
+			dbMutex.release(); // critical section
+			
+			if (log)
+				System.out.println("[YAFIAKDatabaseManager] --- Résultat retourné en "+ Long.toString(System.currentTimeMillis()-startTime) +" millisecondes ---");
+		} catch (SQLException e) {
+			System.out.println("[YAFIAKDatabaseManager][ERROR] --- La récupération des capteurs en base a échoué ---");
+			e.printStackTrace();
+		}
+		
+		return liste;
+	}
+	
+	/**
+	 * The <code>getSensor(int x, int y)</code> method allows to recover the sensor with the logical coordinates x and y in the database
+	 * @param int x
+	 * @param int y
+	 * @return
+	 * 	<code>Sensor</code>
+	 */
+	public Sensor getSensor(int x, int y) {
+		long startTime = System.currentTimeMillis();
+		Sensor sensor = null;
+		
+		try {
+			System.out.println("[YAFIAKDatabaseManager] --- Récupération du capteur de coordonnées logiques ("+Integer.toString(x)+", "+Integer.toString(y)+")... ---");
+			while(!dbMutex.tryAcquire()); // critical section
+			
+			Statement st = connection.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM T_SENSOR_SEN WHERE sen_x="+Integer.toString(x)+" AND sen_y="+Integer.toString(y));
 			
 			while (rs.next())
-				liste.add(new Sensor(rs.getInt(2),rs.getInt(3),rs.getInt(4)));
+				sensor = new Sensor(rs.getInt(3),rs.getInt(2),rs.getInt(4));
 			
 			rs.close();
 			st.close();
@@ -145,13 +181,46 @@ public class YAFIAKDatabaseManager {
 			
 			System.out.println("[YAFIAKDatabaseManager] --- Résultat retourné en "+ Long.toString(System.currentTimeMillis()-startTime) +" millisecondes ---");
 		} catch (SQLException e) {
-			System.out.println("[YAFIAKDatabaseManager][ERROR] --- La récupération des données en base a échoué ---");
+			System.out.println("[YAFIAKDatabaseManager][ERROR] --- La récupération du capteur ("+Integer.toString(x)+", "+Integer.toString(y)+") a échoué ---");
 			e.printStackTrace();
 		}
 		
-		return liste;
+		return sensor;
+		
 	}
 	
-	// TODO The function to update sensors
-
+	/**
+	 * The <code>getSensor(Sensor sensor)</code> method allows to update the sensor with the logical coordinates x and y in the database
+	 * @param Sensor sensor
+	 * @return
+	 * 	<code>Sensor</code>
+	 */
+	public void updateSensor(Sensor sensor) {
+		long startTime = System.currentTimeMillis();
+		
+		try {
+			System.out.println("[YAFIAKDatabaseManager] --- Mise à jour du capteur de coordonnées logiques ("+sensor.getX()+", "+sensor.getY()+")... ---");
+			while(!dbMutex.tryAcquire()); // critical section
+			
+			String update = "UPDATE public.t_sensor_sen SET sen_intensity = ? WHERE sen_x = ? AND sen_y = ?;";
+			
+			PreparedStatement pst = connection.prepareStatement(update);
+			pst.setInt(1, sensor.getIntensity());
+			pst.setInt(2, sensor.getX());
+			pst.setInt(3, sensor.getY());
+			int affectedRows = pst.executeUpdate();
+			connection.commit();
+			
+			pst.close();
+			
+			dbMutex.release(); // critical section
+			
+			System.out.println("[YAFIAKDatabaseManager] --- Mise à jour effectuée en "+ Long.toString(System.currentTimeMillis()-startTime) +" millisecondes ---");
+		} catch (SQLException e) {
+			System.out.println("[YAFIAKDatabaseManager][ERROR] --- Mise à jour du capteur ("+sensor.getX()+", "+sensor.getY()+") a échoué ---");
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

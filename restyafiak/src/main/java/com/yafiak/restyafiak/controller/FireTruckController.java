@@ -39,7 +39,7 @@ public class FireTruckController {
 		return fireTruckRepository.save(fireTruck);
 	}
 	
-	@PutMapping("api/firetrucks/{id}")
+	@PutMapping("api/firetrucks")
 	public ResponseEntity<Object> updateFireTruck(@RequestBody FireTruck fireTruck, @PathVariable long id) {
 		Optional<FireTruck> fireTrucksOptional = fireTruckRepository.findById(id);
 		if (!fireTrucksOptional.isPresent())

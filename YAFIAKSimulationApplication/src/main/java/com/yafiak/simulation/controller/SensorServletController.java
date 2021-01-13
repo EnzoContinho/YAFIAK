@@ -1,7 +1,6 @@
 package com.yafiak.simulation.controller;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,14 +33,23 @@ public class SensorServletController extends HttpServlet {
 	 */
 	@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.out.println("[THREAD][REST API] --- Un client a atteint /api/sensors ---");
+		System.out.println("[THREAD][REST API] --- Un client a atteint: GET /api/sensors ---");
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(gson.toJson(yafiakDBManager.getAll()));
+        response.getWriter().write(gson.toJson(yafiakDBManager.getAll(true)));
         System.out.println("[THREAD][REST API] --- Les données des capteurs ont bien été transmises ---");
         response.getWriter().flush();
         response.getWriter().close();
     }
+	
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		System.out.println("[THREAD][REST API] --- Un client a atteint: POST /api/sensors ---");
+		System.out.println("[THREAD][REST API] --- Les microbits ont bien transmis les données des capteurs ---");
+		
+		YAFIAKSingleton.getInstance().setFiresDetected(true);
+		
+	}
 	
 }
