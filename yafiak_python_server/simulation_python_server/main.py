@@ -1,10 +1,11 @@
 import serial, time
 import threading,random
 import multiprocessing as mp
-
+import requests, json
 # CONSTANT
 SERIALPORT = "COM7"
 BAUDRATE = 115200
+API_SENSOR_URL = "http://localhost:8080/api/sensors"
 
 # GLOBAL
 nValue,nEndTransmission = 0,0
@@ -12,6 +13,14 @@ locationX,locationY = 0,0
 ser = serial.Serial()
 semaphoreSendingData = mp.Semaphore(1)
 
+def getFireHTTP(sLocationX,sLocationY):
+    headers = {"Content-Type": "application/json"}
+    result = requests.get(url = API_SENSOR_URL, headers=headers)
+    jsonValue = json.loads(result.content.decode("utf-8"))
+    for i in range (len(jsonValue)):
+        if (jsonValue[i])["lX"] == int(sLocationX) and (jsonValue[i])["cY"] == int(sLocationY):
+            return ((jsonValue[i])["intensity"])
+    
 
 
 # Function in charge of initialize the serial port
@@ -21,10 +30,10 @@ def initUART():
     ser.bytesize = serial.EIGHTBITS #number of bits per bytes
     ser.parity = serial.PARITY_NONE #set parity check: no parity
     ser.stopbits = serial.STOPBITS_ONE #number of stop bits
-    ser.timeout = None          #block read
+    ser.timeout = None      #block read
     ser.xonxoff = False     #disable software flow control
-    ser.rtscts = False     #disable hardware (RTS/CTS) flow control
-    ser.dsrdtr = False       #disable hardware (DSR/DTR) flow control
+    ser.rtscts = False      #disable hardware (RTS/CTS) flow control
+    ser.dsrdtr = False      #disable hardware (DSR/DTR) flow control
     print("----- Socket's initializing -----")
     try:
             ser.open()
@@ -67,7 +76,7 @@ def getDataToSend():
         locationX = 0
     # Get id and FireIntensity
     sId = str(locationX)+str(locationY+1)
-    sIntensity = str(random.randint(0,100))
+    sIntensity = getFireHTTP(locationX,locationY)
     # Format data
     for i in range(4-len(sId)):
         sId = "0"+sId

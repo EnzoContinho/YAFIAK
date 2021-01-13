@@ -41,7 +41,7 @@ def pushFireHTTP(sLocationX,sLocationY,sFireIntensity):
 # Function that use API to push End Transmission message on apache server
 def pushEndOfTransmissionHTTP():
     headers = {"Content-Type": "application/json"}
-    paramForAPI = json.dumps({'lX': int(sLocationX), 'cY': int(sLocationY), 'intensity' : int(sFireIntensity)})
+    paramForAPI = json.dumps({'lX': -1, 'cY': -1, 'intensity' : -1})
     requests.put(url = API_SENSOR_URL, data = paramForAPI, headers=headers)
 
 # Function in charge of initialize the serial port
