@@ -7,10 +7,13 @@ SERIALPORT = "COM7"
 BAUDRATE = 115200
 
 # GLOBAL
-nValue = 0
-sX,sY = 0,0
+nValue,nEndTransmission = 0,0
+locationX,locationY = 0,0
 ser = serial.Serial()
 semaphoreSendingData = mp.Semaphore(1)
+
+
+
 # Function in charge of initialize the serial port
 def initUART():     
     ser.port=SERIALPORT
@@ -52,16 +55,18 @@ def receiveUARTMessage():
 # Function to get the data to send
 # return a string in format :4 digits | 1 digit | 1 digit | 3 digit
 def getDataToSend():
-    global sX,sY
+    global locationX,locationY,nEndTransmission
     sDataToSend = ""
     # Get X and Y
-    if sY == 6:
-        sX +=1
-        sY = 0
-    if sX == 10:
-        sX = 0
+    if locationY == 6:
+        locationX +=1
+        locationY = 0
+    if locationX == 10:
+        if locationY == 0:
+            nEndTransmission = True
+        locationX = 0
     # Get id and FireIntensity
-    sId = str(random.randint(1,60))
+    sId = str(locationX)+str(locationY+1)
     sIntensity = str(random.randint(0,100))
     # Format data
     for i in range(4-len(sId)):
@@ -69,9 +74,12 @@ def getDataToSend():
     for i in range(3-len(sIntensity)):
         sIntensity = "0"+sIntensity
     # Put together all information
-    sDataToSend = "("+sId+","+str(sX)+","+str(sY)+","+sIntensity+")"
-    # Increment Y
-    sY += 1
+    if nEndTransmission:
+        sDataToSend = "(0000,"+str(locationX)+","+str(locationY)+",000)"
+    else:
+        sDataToSend = "("+sId+","+str(locationX)+","+str(locationY)+","+sIntensity+")"
+        # Increment Y
+        locationY += 1
     return sDataToSend
 
 if __name__ == "__main__" :
@@ -92,3 +100,6 @@ if __name__ == "__main__" :
             # Send data
             sendUARTMessage(sDataToSend)
             # Block sending
+        if nEndTransmission : 
+            nEndTransmission = False
+            time.sleep(5)
