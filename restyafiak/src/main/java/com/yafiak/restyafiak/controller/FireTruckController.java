@@ -36,6 +36,12 @@ public class FireTruckController {
 	
 	@PostMapping("api/firetrucks")
 	public FireTruck createFireTruck(@RequestBody FireTruck fireTruck) {
+		Optional<FireTruck> tmpFireTruck = getFireTruckById(fireTruck.getId());
+		FireTruck fireTruckToUpdate = null;
+		if (tmpFireTruck.isPresent())
+			fireTruckToUpdate = tmpFireTruck.get();
+		fireTruckToUpdate.setLongitude(fireTruck.getLongitude());
+		fireTruckToUpdate.setLatitude(fireTruck.getLatitude());
 		return fireTruckRepository.save(fireTruck);
 	}
 	

@@ -44,6 +44,7 @@ public class SensorController {
 	@PutMapping("api/sensors")
 	public ResponseEntity<Object> updateSensor(@RequestBody Sensor sensor) {
 		List<Sensor> sensors = SensorRepository.findAll();
+		YAFIAKHttpClient httpClient = new YAFIAKHttpClient();
 		Sensor sensorToUpdate = null;
 		// We try to find out the right sensor
 		for (Sensor s: sensors) {
@@ -52,6 +53,17 @@ public class SensorController {
 				break;
 			}
 		}
+		
+		// Tell to the simulation API to recover the trucks
+		if (sensorToUpdate == null) {
+			try {
+				// Simple POST with no content
+				httpClient.postEndOfTransmission();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		// If the sensor exists
 		if (sensorToUpdate != null) {
 			int savedIntensity = sensorToUpdate.getIntensity();
@@ -92,10 +104,10 @@ public class SensorController {
 					String arrivalPoint = Double.toString(sensorToUpdate.getLongitude())
 							+","
 							+Double.toString(sensorToUpdate.getLatitude());
-					// Get the journey from the OSRM API
-					YAFIAKHttpClient httpClient = new YAFIAKHttpClient();
+					
 					String waypoints = "";
 					try {
+						// Get the journey from the OSRM API
 						waypoints = httpClient.getPath(departurePoint, arrivalPoint);
 					} catch (IOException e) {
 						e.printStackTrace();

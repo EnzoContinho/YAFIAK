@@ -202,6 +202,11 @@ public class YAFIAKHttpClient {
 		return fireTrucks;
 	}
 	
+	/**
+	 * The method <code>postFireTruck()</code> allows the HTTP client to update a fire truck
+	 * saved in the YAFIAK EMergency Manger database
+	 * @param fireTruck
+	 */
 	public void postFireTruck(FireTruck fireTruck) {
 		long startTime = System.currentTimeMillis();
 		try {
@@ -241,6 +246,12 @@ public class YAFIAKHttpClient {
 		
 	}
 	
+	/**
+	 * The method <code>deserializeJSON()</code> is used to convert the JSON received from the 
+	 * YAFIAK Emergency Manager REST API (GET - /api/firetrucks)
+	 * @param listToFill
+	 * @param apiResponse
+	 */
 	private void deserializeJSON(List<FireTruck> listToFill, StringBuffer apiResponse) {
 		JSONArray jFireTrucks = new JSONArray(apiResponse.toString());
 		

@@ -12,7 +12,8 @@ import org.json.JSONObject;
 public class YAFIAKHttpClient {
 
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String BASE_URL = "http://router.project-osrm.org/route/v1/driving/";
+	private static final String OSRM_BASE_URL = "http://router.project-osrm.org/route/v1/driving/";
+	private static final String SIMU_BASE_URL = "http://localhost:8081/api/sensors";
 	private static final String SEMI_COLON = ";";
 	private static final String GEOJSON_OPTION = "?geometries=geojson";
 	
@@ -22,7 +23,7 @@ public class YAFIAKHttpClient {
 	public String getPath(String departurePoint, String arrivalPoint) throws IOException {
 		// Set the URL
 		url = new URL(
-			BASE_URL
+			OSRM_BASE_URL
 			+departurePoint
 			+SEMI_COLON
 			+arrivalPoint
@@ -57,5 +58,25 @@ public class YAFIAKHttpClient {
 			System.out.println("GET request not worked");
 		}
 		return jArray;
+	}
+	
+	public void postEndOfTransmission() throws IOException {
+		// Set the URL
+		url = new URL(SIMU_BASE_URL);
+		HttpURLConnection connexion = (HttpURLConnection) url.openConnection();
+		connexion.setRequestMethod("POST");
+		connexion.setRequestProperty("Content-Type", "application/json; utf-8");
+		connexion.setRequestProperty("Accept", "application/json");
+		connexion.setDoOutput(true);
+		
+		int responseCode = 0;
+		responseCode = connexion.getResponseCode();
+		
+		if (responseCode == HttpURLConnection.HTTP_OK) {
+			System.out.println("End of transmission POST succeed");
+		} else {
+			System.out.println("End of transmission POST failed ("+Integer.toString(responseCode)+")");
+		}
+		
 	}
 }
