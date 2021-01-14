@@ -5,7 +5,7 @@ import requests, json
 # CONSTANT
 SERIALPORT = "COM7"
 BAUDRATE = 115200
-API_SENSOR_URL = "http://localhost:8080/api/sensors"
+API_SENSOR_URL = "http://localhost:8081/api/sensors"
 
 # GLOBAL
 nValue,nEndTransmission = 0,0
@@ -18,7 +18,7 @@ def getFireHTTP(sLocationX,sLocationY):
     result = requests.get(url = API_SENSOR_URL, headers=headers)
     jsonValue = json.loads(result.content.decode("utf-8"))
     for i in range (len(jsonValue)):
-        if (jsonValue[i])["lX"] == int(sLocationX) and (jsonValue[i])["cY"] == int(sLocationY):
+        if (jsonValue[i])["x"] == int(sLocationX) and (jsonValue[i])["y"] == int(sLocationY):
             return ((jsonValue[i])["intensity"])
     
 
@@ -76,7 +76,7 @@ def getDataToSend():
         locationX = 0
     # Get id and FireIntensity
     sId = str(locationX)+str(locationY+1)
-    sIntensity = getFireHTTP(locationX,locationY)
+    sIntensity = str(getFireHTTP(locationX,locationY))
     # Format data
     for i in range(4-len(sId)):
         sId = "0"+sId

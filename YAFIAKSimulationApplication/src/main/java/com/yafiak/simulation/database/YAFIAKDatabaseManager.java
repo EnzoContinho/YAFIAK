@@ -136,7 +136,7 @@ public class YAFIAKDatabaseManager {
 			ResultSet rs = st.executeQuery("SELECT * FROM T_SENSOR_SEN");
 			
 			while (rs.next())
-				liste.add(new Sensor(rs.getInt(3),rs.getInt(2),rs.getInt(4)));
+				liste.add(new Sensor(rs.getInt(3),rs.getInt(2),rs.getInt(4), rs.getFloat(5), rs.getFloat(6)));
 			
 			rs.close();
 			st.close();
@@ -172,7 +172,7 @@ public class YAFIAKDatabaseManager {
 			ResultSet rs = st.executeQuery("SELECT * FROM T_SENSOR_SEN WHERE sen_x="+Integer.toString(x)+" AND sen_y="+Integer.toString(y));
 			
 			while (rs.next())
-				sensor = new Sensor(rs.getInt(3),rs.getInt(2),rs.getInt(4));
+				sensor = new Sensor(rs.getInt(3),rs.getInt(2),rs.getInt(4), rs.getFloat(5), rs.getFloat(6));
 			
 			rs.close();
 			st.close();

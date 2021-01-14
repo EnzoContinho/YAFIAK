@@ -29,6 +29,7 @@ public class FireTruckTask extends TimerTask {
 	
 	@Override
 	public void run() {
+		System.out.println("camion ("+this.fireTruck.getId()+")");
 		double fireTruckLongitude = this.fireTruck.getLongitude();
 		double fireTruckLatitude = this.fireTruck.getLatitude();
 		

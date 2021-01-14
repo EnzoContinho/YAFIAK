@@ -45,8 +45,6 @@ public class SensorServletController extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		System.out.println("[THREAD][REST API] --- Un client a atteint: POST /api/sensors ---");
-		System.out.println("[THREAD][REST API] --- Les microbits ont bien transmis les données des capteurs ---");
 		
 		YAFIAKSingleton.getInstance().setFiresDetected(true);
 		

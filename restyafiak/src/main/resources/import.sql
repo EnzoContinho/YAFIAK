@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS public.t_sensor_sen;
+
+CREATE TABLE public.t_sensor_sen(
+    sen_id bigint UNIQUE NOT NULL,
+	sen_y integer NOT NULL,
+	sen_x integer NOT NULL,
+	sen_intensity integer NOT NULL,
+	sen_lat real NOT NULL,
+	sen_long real NOT NULL,
+	sen_name varchar(100) not null,
+	CONSTRAINT t_sensor_sen_pkey PRIMARY KEY (sen_id)
+);
+
 INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, sen_long, sen_name) VALUES (1, 0, 0, 0, 45.763159536648914, 4.822648316418376, 'Basilique de Fourvière');
 INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, sen_long, sen_name) VALUES (2, 1, 0, 0, 45.76884762930256, 4.8356945814534065, 'Hôtel de ville - Louis Pradel');
 INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, sen_long, sen_name) VALUES (3, 2, 0, 0, 45.78285582587307, 4.83080223206527, 'Hôpital de la Croix-Rousse');
@@ -58,72 +71,3 @@ INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, se
 INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, sen_long, sen_name) VALUES (58, 3, 9, 0, 45.740859492046184, 4.844156577609335, 'Fourrière municipale');
 INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, sen_long, sen_name) VALUES (59, 4, 9, 0, 45.746123021483086, 4.843028847938458, 'CPAM du Rhône');
 INSERT INTO public.t_sensor_sen(sen_id, sen_y, sen_x, sen_intensity, sen_lat, sen_long, sen_name) VALUES (60, 5, 9, 0, 45.75885200001829, 4.830589214003582, 'Pharmacie Bellecour');
-
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (1, 45.74732869418601, 4.825809879139301, 'Caserne Lyon-Confluence');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (2, 45.76277845272348, 4.843914788747277, 'SDIS Du Rhône');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (3, 45.773672232961374, 4.7778653980177825, 'Sapeurs-Pompiers d''Ecully (SDMIS)');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (4, 45.78113244513252, 4.877883146222342, 'SDIS - La Doua');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (5, 45.75263255713016, 4.848700714875826, 'Centre d''intervention Lyon Rochat');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (6, 45.7666448258836, 4.906550593486273, 'Union Départementale des Sapeurs-Pompiers');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (7, 45.716088304467995, 4.917021936498846, 'GFOR SDMIS');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (8, 45.733344964358935, 4.827758028850679, 'Syndicat Autonome du SDIS du Rhône');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (9, 45.75826184009678, 4.780036170531082, 'SDIS - Tassin-La-Demi-Lune');
-INSERT INTO public.t_firestation_fst(fst_id, fst_lat, fst_long, fst_name) VALUES (10, 45.73454314557372, 4.787760931769865, 'SDIS - Sainte-Foy-lès-Lyon');
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (1, 3000, 45.74732869418601, 4.825809879139301, 'Extincteur 3000', 300, 1, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (2, 10000, 45.74732869418601, 4.825809879139301, 'Jeanne d''Arc', 600, 1, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (3, 15000, 45.74732869418601, 4.825809879139301, 'Nôtre-Dame', 950, 1, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (4, 50000, 45.74732869418601, 4.825809879139301, 'Master Fiakos', 1500, 1, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (5, 70000, 45.76277845272348, 4.843914788747277, 'KillFire', 1500, 2, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (6, 20000, 45.76277845272348, 4.843914788747277, 'Johnny Halliday', 800, 2, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (7, 15000, 45.76277845272348, 4.843914788747277, 'John Terry', 950, 2, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (8, 45000, 45.76277845272348, 4.843914788747277, 'Franck Lampard', 1050, 2, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (9, 50000, 45.773672232961374, 4.7778653980177825, 'Steven Gerrard', 1500, 3, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (10, 50000, 45.773672232961374, 4.7778653980177825, 'Ryan Giggs', 1500, 3, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (11, 15000, 45.773672232961374, 4.7778653980177825, 'Demba Ba', 950, 3, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (12, 30000, 45.773672232961374, 4.7778653980177825, 'Michael Ballack', 800, 3, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (13, 25000, 45.773672232961374, 4.7778653980177825, 'Camion Inactif', 750, 3, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (14, 50000, 45.78113244513252, 4.877883146222342, 'LX50 - Mercedez Utility', 1500, 4, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (15, 50000, 45.78113244513252, 4.877883146222342, 'VMX50 - Citroën', 1500, 4, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (16, 15000, 45.78113244513252, 4.877883146222342, 'SML15 - Petite capacité', 950, 4, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (17, 30000, 45.75263255713016, 4.848700714875826, 'CT30FM - Water machine 1', 800, 5, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (18, 25000, 45.75263255713016, 4.848700714875826, '25TM - Tanker moyenne capacité', 750, 5, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (19, 30000, 45.75263255713016, 4.848700714875826, 'CT30FM - Water machine 2', 800, 5, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (20, 25000, 45.75263255713016, 4.848700714875826, '25TM - Réservoir cylindrique', 750, 5, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (21, 30000, 45.75263255713016, 4.848700714875826, 'CT30FM - Intervention rapide', 800, 5, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (22, 25000, 45.75263255713016, 4.848700714875826, '25TM - Lance longue portée', 750, 5, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (23, 30000, 45.7666448258836, 4.906550593486273, 'C30L - Rapid switch off', 800, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (24, 25000, 45.7666448258836, 4.906550593486273, 'KL25P - Cold Blazer', 750, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (25, 30000, 45.7666448258836, 4.906550593486273, 'PX30S - Marie-Jeane', 800, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (26, 25000, 45.7666448258836, 4.906550593486273, 'OLA25 - Echelle Automatique', 750, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (27, 30000, 45.7666448258836, 4.906550593486273, '30LZY - Medium Tanker', 800, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (28, 25000, 45.7666448258836, 4.906550593486273, 'OLA25 - Echelle Automatique', 750, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (29, 30000, 45.7666448258836, 4.906550593486273, 'Le sauceur', 800, 6, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (30, 25000, 45.7666448258836, 4.906550593486273, '25TM - Tanker moyenne capacité', 750, 6, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (31, 50000, 45.716088304467995, 4.917021936498846, 'LX50 - Matériel éducatif GFOR 1', 1500, 7, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (32, 50000, 45.716088304467995, 4.917021936498846, 'VMX50 - Matériel éducatif GFOR 2', 1500, 7, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (33, 15000, 45.716088304467995, 4.917021936498846, 'SML15 - Matériel éducatif GFOR 3', 950, 7, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (34, 25000, 45.716088304467995, 4.917021936498846, 'LX25 - Matériel éduatif GFOR 4', 1500, 7, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (35, 30000, 45.716088304467995, 4.917021936498846, 'VMX30 - Matériel éducatif GFOR 5', 1500, 7, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (36, 15000, 45.716088304467995, 4.917021936498846, 'SML15 - Matériel éducatif GFOR 6', 950, 7, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (37, 50000, 45.733344964358935, 4.827758028850679, 'LX50 - Syndic Marchal', 1500, 8, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (38, 50000, 45.733344964358935, 4.827758028850679, 'VMX50 - Syndic Kaporal', 1500, 8, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (39, 15000, 45.733344964358935, 4.827758028850679, 'SML15 - Syndic Soldat', 950, 8, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (40, 70000, 45.75826184009678, 4.780036170531082, 'LX50 - Tassin Pleine Lune', 1500, 9, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (41, 50000, 45.75826184009678, 4.780036170531082, 'VMX50 - Tassin Croissant de Lune', 1500, 9, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (42, 20000, 45.75826184009678, 4.780036170531082, 'SML15 - Tassin Lune qui débite', 950, 9, null);
-
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (43, 30000, 45.73454314557372, 4.787760931769865, 'CS30FM - Water machine 3', 800, 10, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (44, 25000, 45.73454314557372, 4.787760931769865, '25TF - Petite capacité', 750, 10, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (45, 30000, 45.73454314557372, 4.787760931769865, 'CT30FM - Water machine 4', 800, 10, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (46, 25000, 45.73454314557372, 4.787760931769865, '25TP - cylindrique', 750, 10, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (47, 30000, 45.73454314557372, 4.787760931769865, 'CT30LM - Intervention lente', 800, 10, null);
-INSERT INTO public.t_firetruck_ftr(ftr_id, ftr_capacity, ftr_lat, ftr_long, ftr_name, ftr_rate, ftr_firestation_id, ftr_sensor_id) VALUES (48, 25000, 45.73454314557372, 4.787760931769865, '25TD - Lance Xtra longue portée', 750, 10, null);
